@@ -34,7 +34,7 @@ public class Board {
     // Sets up an initial board state.
     public void setStandardBoard() {
         int y = 1;
-        COLOR col = COLOR.WHITE;
+        COLOR col = COLOR.BLACK;
         setPiece(1, y, new Piece(PIECETYPE.ROOK, col));
         setPiece(8, y, new Piece(PIECETYPE.ROOK, col));
         setPiece(2, y, new Piece(PIECETYPE.KNIGHT, col));
@@ -49,7 +49,7 @@ public class Board {
         }
 
         y = 8;
-        col = COLOR.BLACK;
+        col = COLOR.WHITE;
         setPiece(1, y, new Piece(PIECETYPE.ROOK, col));
         setPiece(8, y, new Piece(PIECETYPE.ROOK, col));
         setPiece(2, y, new Piece(PIECETYPE.KNIGHT, col));
