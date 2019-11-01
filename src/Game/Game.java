@@ -20,11 +20,11 @@ public class Game {
         board.setStandardBoard();
 
         // Initialize tapdancer.
-        tapDancer = new AIMain();
+        tapDancer = new AIMain(COLOR.BLACK);
 
         // TODO: Remove test code.
         Evaluator e = new Evaluator();
-        e.evaluateBoard(board);
+        e.evaluateBoard(board, COLOR.BLACK);
 
         System.out.println("Which colour are you? (W/B)");
         String colour = input.next();
