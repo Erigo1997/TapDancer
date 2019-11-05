@@ -28,6 +28,7 @@ public class AIMain {
         firstState.alpha = -999999;
         firstState.beta = 999999;
         firstState.depth = 0;
+        firstState.turnColor = myColor;
 
         search(firstState);
 
@@ -51,14 +52,17 @@ public class AIMain {
             for (int y = 1; y <= 8; y++) {
                 for (int x = 1; x <= 8; x++) {
                     // If the field contains a piece whose turn it is
-                    if (board.getPiece(x, y).color == state.turnColor) {
+                    if (board.getPiece(x, y) != null && board.getPiece(x, y).color == state.turnColor) {
+                        System.out.println("TapDancer found a: " + board.getPiece(x, y) + " with colour " + board.getPiece(x, y).color);
                         // Then let's search all valid moves.
                         List<Move> moves = getMoves(board.getPiece(x, y), state.turnColor, x, y);
                         for (Move move: moves) {
                             newState = new State();
                             newState.move = move;
                             newState.depth = state.depth + 1;
+                            System.out.println(move);
                         }
+                        // TODO: Set new states colour to opposite.
                     }
                 }
             }
@@ -68,17 +72,19 @@ public class AIMain {
 
     }
 
-    private boolean checkExists(int x, int y) {
+    public boolean checkExists(int x, int y) {
         try {
             board.getPiece(x, y);
             return true;
         } catch (NullPointerException e) {
             return false;
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return false;
         }
     }
 
     // Returns a list of available moves for a piece.
-    private List<Move> getMoves(Piece piece, COLOR turnColor, int x, int y) {
+    public List<Move> getMoves(Piece piece, COLOR turnColor, int x, int y) {
         int x2, y2;
         List<Move> output = new ArrayList<Move>();
         switch (piece.type) {
@@ -100,15 +106,19 @@ public class AIMain {
                     // Let's check if we can beat down anyone. First up and to the left.
                     x2 = x - 1;
                     y2 = y + 1;
-                    if (board.getPiece(x2, y2) != null && board.getPiece(x2, y2).color == COLOR.BLACK) {
-                        output.add(new Move(x, y , x2, y2, piece, board.getPiece(x2, y2), false));
+                    if (checkExists(x2, y2)) {
+                        if (board.getPiece(x2, y2) != null && board.getPiece(x2, y2).color == COLOR.WHITE) {
+                            output.add(new Move(x, y , x2, y2, piece, board.getPiece(x2, y2), false));
+                        }
                     }
 
                     x2 = x + 1;
                     y2 = y + 1;
                     // Now up and to the right.
-                    if (board.getPiece(x2, y2) != null && board.getPiece(x2, y2).color == COLOR.BLACK) {
-                        output.add(new Move(x, y , x2, y2, piece, board.getPiece(x2, y2), false));
+                    if (checkExists(x2, y2)) {
+                        if (board.getPiece(x2, y2) != null && board.getPiece(x2, y2).color == COLOR.WHITE) {
+                            output.add(new Move(x, y , x2, y2, piece, board.getPiece(x2, y2), false));
+                        }
                     }
                     // ELSE for black pawns.
                 } else {
@@ -126,15 +136,19 @@ public class AIMain {
                     // Let's check if we can beat down anyone. First down and to the left.
                     x2 = x - 1;
                     y2 = y - 1;
-                    if (board.getPiece(x2, y2) != null && board.getPiece(x2, y2).color == COLOR.WHITE) {
-                        output.add(new Move(x, y , x2, y2, piece, board.getPiece(x2, y2), false));
+                    if (checkExists(x2, y2)) {
+                        if (board.getPiece(x2, y2) != null && board.getPiece(x2, y2).color == COLOR.WHITE) {
+                            output.add(new Move(x, y , x2, y2, piece, board.getPiece(x2, y2), false));
+                        }
                     }
 
                     x2 = x + 1;
                     y2 = y - 1;
                     // Now down and to the right.
-                    if (board.getPiece(x2, y2) != null && board.getPiece(x2, y2).color == COLOR.WHITE) {
-                        output.add(new Move(x, y, x2, y2, piece, board.getPiece(x2, y2), false));
+                    if (checkExists(x2, y2)) {
+                        if (board.getPiece(x2, y2) != null && board.getPiece(x2, y2).color == COLOR.WHITE) {
+                            output.add(new Move(x, y , x2, y2, piece, board.getPiece(x2, y2), false));
+                        }
                     }
                 }
                 break;
@@ -217,50 +231,50 @@ public class AIMain {
                 // Up-Left.
                 x2 = x;
                 y2 = y;
-                while (checkExists(x2--, y2++)) {
+                while (checkExists(--x2, ++y2)) {
                     if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
                 }
                 // Up-Right.
                 x2 = x;
                 y2 = y;
-                while (checkExists(x2++, y2++)) {
+                while (checkExists(++x2, ++y2)) {
                     if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
                 }
                 // Down-Left
                 x2 = x;
                 y2 = y;
-                while (checkExists(x2--, y2--)) {
+                while (checkExists(--x2, --y2)) {
                     if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
                 }
                 // Down-Right
                 x2 = x;
                 y2 = y;
-                while (checkExists(x2--, y2--)) {
+                while (checkExists(--x2, --y2)) {
                     if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
                 }
                 // Let's check the four cardinal directions.
                 // Left.
                 x2 = x;
                 y2 = y;
-                while (checkExists(x2--, y2)) {
+                while (checkExists(--x2, y2)) {
                     if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
                 }
                 // Right.
                 x2 = x;
                 y2 = y;
-                while (checkExists(x2++, y2)) {
+                while (checkExists(++x2, y2)) {
                     if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
                 }
                 // Up.
                 x2 = x;
                 y2 = y;
-                while (checkExists(x2, y2++)) {
+                while (checkExists(x2, ++y2)) {
                     if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
                 }
                 // Down
                 x2 = x;
                 y2 = y;
-                while (checkExists(x2, y2--)) {
+                while (checkExists(x2, --y2)) {
                     if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
                 }
                 break;
@@ -269,25 +283,25 @@ public class AIMain {
                 // Up-Left.
                 x2 = x;
                 y2 = y;
-                while (checkExists(x2--, y2++)) {
+                while (checkExists(--x2, ++y2)) {
                     if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
                 }
                 // Up-Right.
                 x2 = x;
                 y2 = y;
-                while (checkExists(x2++, y2++)) {
+                while (checkExists(++x2, ++y2)) {
                     if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
                 }
                 // Down-Left
                 x2 = x;
                 y2 = y;
-                while (checkExists(x2--, y2--)) {
+                while (checkExists(--x2, --y2)) {
                     if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
                 }
                 // Down-Right
                 x2 = x;
                 y2 = y;
-                while (checkExists(x2--, y2--)) {
+                while (checkExists(--x2, --y2)) {
                     if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
                 }
                 break;
@@ -296,37 +310,39 @@ public class AIMain {
                 // Left.
                 x2 = x;
                 y2 = y;
-                while (checkExists(x2--, y2)) {
+                while (checkExists(--x2, y2)) {
                     if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
                 }
                 // Right.
                 x2 = x;
                 y2 = y;
-                while (checkExists(x2++, y2)) {
+                while (checkExists(++x2, y2)) {
                     if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
                 }
                 // Up.
                 x2 = x;
                 y2 = y;
-                while (checkExists(x2, y2++)) {
+                while (checkExists(x2, ++y2)) {
                     if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
                 }
                 // Down
                 x2 = x;
                 y2 = y;
-                while (checkExists(x2, y2--)) {
+                while (checkExists(x2, --y2)) {
                     if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
                 }
                 break;
         }
+        return output;
     }
 
+    // Adds moves to the output unless the spot is occupied by allies.
     private boolean scanField(Piece piece, COLOR turnColor, int x, int y, int x2, int y2, List<Move> output) {
         // If the spot is empty, that's a move.
         if (board.getPiece(x2, y2) == null) {
             output.add(new Move(x, y, x2, y2, piece, null, false));
         } else {
-            // if the spot is occupied by an enemy, that's a move.
+            // If the spot is occupied by an enemy, that's a move.
             if (board.getPiece(x2, y2).color != turnColor) {
                 output.add(new Move(x, y, x2, y2, piece, board.getPiece(x2, y2), false));
                 return true;

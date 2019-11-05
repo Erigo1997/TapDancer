@@ -34,7 +34,7 @@ public class Board {
     // Sets up an initial board state.
     public void setStandardBoard() {
         int y = 1;
-        COLOR col = COLOR.BLACK;
+        COLOR col = COLOR.WHITE;
         setPiece(1, y, new Piece(PIECETYPE.ROOK, col));
         setPiece(8, y, new Piece(PIECETYPE.ROOK, col));
         setPiece(2, y, new Piece(PIECETYPE.KNIGHT, col));
@@ -49,7 +49,7 @@ public class Board {
         }
 
         y = 8;
-        col = COLOR.WHITE;
+        col = COLOR.BLACK;
         setPiece(1, y, new Piece(PIECETYPE.ROOK, col));
         setPiece(8, y, new Piece(PIECETYPE.ROOK, col));
         setPiece(2, y, new Piece(PIECETYPE.KNIGHT, col));
@@ -68,7 +68,7 @@ public class Board {
     // Silly logic to print out the board correctly.
     public String toString() {
         String output = "";
-        for (int i = board.length - 1; i > -1; i--) {
+        for (int i = board.length - 1; i >=  0; i--) {
             for (int j = 0; j < board[i].length; j++) {
                 output += board[j][i].toString();
             }

@@ -22,10 +22,6 @@ public class Game {
         // Initialize tapdancer.
         tapDancer = new AIMain(COLOR.BLACK);
 
-        // TODO: Remove test code.
-        Evaluator e = new Evaluator();
-        e.evaluateBoard(board, COLOR.BLACK);
-
         System.out.println("Which colour are you? (W/B)");
         String colour = input.next();
         if (colour.equals("W"))
