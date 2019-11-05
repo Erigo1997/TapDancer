@@ -30,13 +30,21 @@ public class AIMain {
         firstState.depth = 0;
         firstState.turnColor = myColor;
 
+        // Let's reset the stattracker.
+        StatTracker.getInstance().iterations = 0;
         search(firstState);
 
+        // Let's see how that went!
+        System.out.println("TapDancer searched a whopping " + StatTracker.getInstance().iterations + " different states.");
 
         return null;
     }
 
+
     private void search(State state) {
+
+        // Let's update the stattracker on the latest news.
+        StatTracker.getInstance().iterations++;
 
         // TODO: Can we check a win condition here? If so, return it.
         // --------- Win Condition
@@ -47,22 +55,31 @@ public class AIMain {
         // ----------- Search all moves with alpha beta pruning -------------
         State newState;
         // Check that depth hasn't exceeded max depth.
-        if (state.depth <= maxDepth) {
+        if (state.depth < maxDepth) {
             // Double for loop for the entire board.
             for (int y = 1; y <= 8; y++) {
                 for (int x = 1; x <= 8; x++) {
                     // If the field contains a piece whose turn it is
                     if (board.getPiece(x, y) != null && board.getPiece(x, y).color == state.turnColor) {
-                        System.out.println("TapDancer found a: " + board.getPiece(x, y) + " with colour " + board.getPiece(x, y).color);
+                        // System.out.println("TapDancer found a: " + board.getPiece(x, y) + " with colour " + board.getPiece(x, y).color);
                         // Then let's search all valid moves.
+                        // TODO: We need some bloody pruning up in this *****
                         List<Move> moves = getMoves(board.getPiece(x, y), state.turnColor, x, y);
                         for (Move move: moves) {
                             newState = new State();
+                            // TODO: Reconsider - do states really need to contain moves?
                             newState.move = move;
                             newState.depth = state.depth + 1;
-                            System.out.println(move);
+                            // System.out.println(move);
+                            // Set the colour to opposite.
+                            if (state.turnColor == COLOR.WHITE)
+                                newState.turnColor = COLOR.BLACK;
+                            else
+                                newState.turnColor = COLOR.WHITE;
+                            board.playMove(move);
+                            search(newState);
+                            board.reverseMove(move); // Make sure the board is reverted.
                         }
-                        // TODO: Set new states colour to opposite.
                     }
                 }
             }
@@ -157,14 +174,14 @@ public class AIMain {
                 y2 = y;
 
                 // We check all nine fields around the king. We start at upwards and go with the clock.
-                if (checkExists(x2, y2 + 1)) scanField(piece, turnColor, x, y, x2, y2, output);
-                if (checkExists(x2 + 1, y2 + 1)) scanField(piece, turnColor, x, y, x2, y2, output);
-                if (checkExists(x2 + 1, y2)) scanField(piece, turnColor, x, y, x2, y2, output);
-                if (checkExists(x2 + 1, y2 - 1)) scanField(piece, turnColor, x, y, x2, y2, output);
-                if (checkExists(x2, y2 - 1)) scanField(piece, turnColor, x, y, x2, y2, output);
-                if (checkExists(x2 - 1, y2 - 1)) scanField(piece, turnColor, x, y, x2, y2, output);
-                if (checkExists(x2 - 1, y2)) scanField(piece, turnColor, x, y, x2, y2, output);
-                if (checkExists(x2 - 1, y2 + 1)) scanField(piece, turnColor, x, y, x2, y2, output);
+                if (checkExists(x, y + 1)) scanField(piece, turnColor, x, y, x, y + 1, output);
+                if (checkExists(x + 1, y + 1)) scanField(piece, turnColor, x, y, x + 1, y + 1, output);
+                if (checkExists(x + 1, y)) scanField(piece, turnColor, x, y, x + 1, y, output);
+                if (checkExists(x + 1, y - 1)) scanField(piece, turnColor, x, y, x + 1, y - 1, output);
+                if (checkExists(x, y - 1)) scanField(piece, turnColor, x, y, x, y - 1, output);
+                if (checkExists(x - 1, y - 1)) scanField(piece, turnColor, x, y, x - 1, y - 1, output);
+                if (checkExists(x - 1, y)) scanField(piece, turnColor, x, y, x - 1, y, output);
+                if (checkExists(x - 1, y + 1)) scanField(piece, turnColor, x, y, x - 1, y + 1, output);
                 break;
             case KNIGHT:
                 // We check in a windmill from the upwards-right movement and around the clock. Just trust me.

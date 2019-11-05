@@ -22,6 +22,19 @@ public class Board {
         }
     }
 
+    public void playMove(Move move){
+        setPiece(move.fromX, move.fromY, null);
+        setPiece(move.toX, move.toY, move.subject);
+    }
+
+    public void reverseMove(Move move){
+        if (move.target != null)
+            setPiece(move.toX, move.toY, move.target);
+        else
+            setPiece(move.toX, move.toY, null);
+        setPiece(move.fromX, move.fromY, move.subject);
+    }
+
     // Conversion from 1-8 to 0-7, simplifying piece placement.
     public void setPiece(int x, int y, Piece piece) {
         board[x - 1][y - 1].setPiece(piece);

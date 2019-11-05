@@ -17,6 +17,6 @@ public class Move {
     }
 
     public String toString() {
-        return subject + " moved from " + fromY + fromX + " to " + toY + toX;
+        return subject + " moved from " + fromY + "," + fromX + " to " + toY + "," + toX;
     }
 }
