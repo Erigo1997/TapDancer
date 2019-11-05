@@ -32,6 +32,8 @@ public class AIMain {
 
         // Let's reset the stattracker.
         StatTracker.getInstance().iterations = 0;
+
+        // TODO: We need to return a move somehow. Otherwise this is kind of silly.
         search(firstState);
 
         // Let's see how that went!
@@ -84,7 +86,7 @@ public class AIMain {
                 }
             }
         }
-        // TODO: Evaluate the state here.
+        // TODO: Evaluate the state here. Test evaluation for speed. Depth 6 took about 10 seconds with no evaluation.
 
 
     }
