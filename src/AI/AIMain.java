@@ -10,9 +10,10 @@ import java.util.List;
 
 public class AIMain {
 
-    final int maxDepth = 6; // How many moves to search into.
+    final int maxDepth = 3; // How many moves to search into.
     Board board;
     COLOR myColor;
+    Move returnMove; // Set in Search in larger scope for practical reasons. Is the move we would like to return.
 
     // Constructor with color.
     public AIMain(COLOR color) {
@@ -48,7 +49,7 @@ public class AIMain {
     }
 
 
-    private void search(State state) {
+    private int search(State state) {
 
         // Let's update the stattracker on the latest news.
         StatTracker.getInstance().iterations++;
@@ -60,8 +61,11 @@ public class AIMain {
         // TODO: Check any moves left. Probably not gonna be relevant for some time.
         // ----------- Check if there are any moves left. If not, let's go back. -----------
 
-        // ----------- Search all moves with alpha beta pruning -------------
+        // ----------- Initiliaze our auxiliary variables instead of doing it in code ---------
+        int value;
         State newState;
+        boolean isMax = state.turnColor == myColor; // Are we Max-searching or Min-searching? Self is maxsearching.
+        // ----------- Search all moves with alpha beta pruning -------------
         // Check that depth hasn't exceeded max depth.
         if (state.depth < maxDepth) {
             // Double for loop for the entire board.
@@ -69,32 +73,53 @@ public class AIMain {
                 for (int x = 1; x <= 8; x++) {
                     // If the field contains a piece whose turn it is
                     if (board.getPiece(x, y) != null && board.getPiece(x, y).color == state.turnColor) {
-                        // System.out.println("TapDancer found a: " + board.getPiece(x, y) + " with colour " + board.getPiece(x, y).color);
                         // Then let's search all valid moves.
-                        // TODO: We need some bloody pruning up in this *****
                         List<Move> moves = getMoves(board.getPiece(x, y), state.turnColor, x, y);
                         for (Move move: moves) {
+                            // If alpha is larger than beta, return.
+                            // TODO: Can we add some stat-tracking here?
+                            if (state.alpha > state.beta) {
+                                if (isMax) {
+                                    return state.alpha;
+                                } else {
+                                    return state.beta;
+                                }
+                            }
                             newState = new State();
                             // TODO: Reconsider - do states really need to contain moves?
                             newState.move = move;
                             newState.depth = state.depth + 1;
+                            newState.alpha = state.alpha;
+                            newState.beta = state.beta;
                             // System.out.println(move);
                             // Set the colour to opposite.
                             if (state.turnColor == COLOR.WHITE)
                                 newState.turnColor = COLOR.BLACK;
                             else
                                 newState.turnColor = COLOR.WHITE;
+                            // Let's alpha-beta-value-prune.
                             board.playMove(move);
-                            search(newState);
+                            value = search(newState);
                             board.reverseMove(move); // Make sure the board is reverted.
+                            if (isMax) {
+                                if (value > state.alpha) {
+                                    state.alpha = value;
+                                    if (state.depth == 0) {
+                                        returnMove = move;
+                                    }
+                                }
+                            } else {
+                                if (value < state.beta) {
+                                    state.beta = value;
+                                }
+                            }
                         }
                     }
                 }
             }
         }
         // TODO: Evaluate the state here. Test evaluation for speed. Depth 6 took about 10 seconds with no evaluation - or pruning! Depth 7 never seems to finish.
-
-
+        return 0;
     }
 
     public boolean checkExists(int x, int y) {
