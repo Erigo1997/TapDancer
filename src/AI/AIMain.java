@@ -10,7 +10,7 @@ import java.util.List;
 
 public class AIMain {
 
-    final int maxDepth = 1;
+    final int maxDepth = 6; // How many moves to search into.
     Board board;
     COLOR myColor;
 
@@ -19,7 +19,7 @@ public class AIMain {
         myColor = color;
     }
 
-    //
+    // Making a move.
     public Move makeMove(Board board) {
 
         // Time to tap on some fools.
@@ -32,12 +32,17 @@ public class AIMain {
 
         // Let's reset the stattracker.
         StatTracker.getInstance().iterations = 0;
+        StatTracker.getInstance().resetDepthIterations();
 
         // TODO: We need to return a move somehow. Otherwise this is kind of silly.
         search(firstState);
 
         // Let's see how that went!
         System.out.println("TapDancer searched a whopping " + StatTracker.getInstance().iterations + " different states.");
+        System.out.println("TapDancer searched on following depths: ");
+        for (int i = 0; i < StatTracker.getInstance().depthIterations.length; i++) {
+            System.out.println("Depth[" + i + "]: " + StatTracker.getInstance().depthIterations[i]);
+        }
 
         return null;
     }
@@ -47,6 +52,7 @@ public class AIMain {
 
         // Let's update the stattracker on the latest news.
         StatTracker.getInstance().iterations++;
+        StatTracker.getInstance().depthIterations[state.depth]++;
 
         // TODO: Can we check a win condition here? If so, return it.
         // --------- Win Condition
@@ -86,7 +92,7 @@ public class AIMain {
                 }
             }
         }
-        // TODO: Evaluate the state here. Test evaluation for speed. Depth 6 took about 10 seconds with no evaluation.
+        // TODO: Evaluate the state here. Test evaluation for speed. Depth 6 took about 10 seconds with no evaluation - or pruning! Depth 7 never seems to finish.
 
 
     }
