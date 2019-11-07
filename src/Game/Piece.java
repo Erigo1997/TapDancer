@@ -7,10 +7,34 @@ public class Piece {
 
     public PIECETYPE type;
     public COLOR color;
+    public int value;
 
     public Piece(PIECETYPE type, COLOR color) {
         this.type = type;
         this.color = color;
+        value = setValue();
+    }
+
+    public void setPieceValue(int amount){
+        value = amount;
+    }
+
+    private int setValue(){
+        switch(type) {
+            case KING:
+                return 10000;
+            case PAWN:
+                return 100;
+            case ROOK:
+                return 500;
+            case QUEEN:
+                return 900;
+            case BISHOP:
+            case KNIGHT:
+                return 300;
+            default:
+                return 0;
+        }
     }
 
     // Print out the piece in question.
