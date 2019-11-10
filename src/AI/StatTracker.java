@@ -15,6 +15,8 @@ public class StatTracker {
         }
     }
 
+    // TODO: Method to compare depthIterations against DefaultIterations.
+
     public static StatTracker getInstance() {
         if (statTracker == null) {
             statTracker = new StatTracker();
