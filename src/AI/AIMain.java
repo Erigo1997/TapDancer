@@ -10,7 +10,7 @@ import java.util.List;
 
 public class AIMain {
 
-    final int maxDepth = 3; // How many moves to search into.
+    final int maxDepth = 6; // How many moves to search into.
     Board board;
     COLOR myColor;
     Move returnMove; // Set in Search in larger scope for practical reasons. Is the move we would like to return.
