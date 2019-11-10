@@ -17,32 +17,32 @@ public class Piece {
     public String toString() {
         switch(type) {
             case KING:
-                if (color == COLOR.WHITE)
+                if (color == COLOR.BLACK)
                     return "♔";
                 else
                     return "♚";
             case PAWN:
-                if (color == COLOR.WHITE)
+                if (color == COLOR.BLACK)
                     return "♙";
                 else
                     return "♟";
             case ROOK:
-                if (color == COLOR.WHITE)
+                if (color == COLOR.BLACK)
                     return "♖";
                 else
                     return "♜";
             case QUEEN:
-                if (color == COLOR.WHITE)
+                if (color == COLOR.BLACK)
                     return "♕";
                 else
                     return "♛";
             case BISHOP:
-                if (color == COLOR.WHITE)
+                if (color == COLOR.BLACK)
                     return "♗";
                 else
                     return "♝";
             case KNIGHT:
-                if (color == COLOR.WHITE)
+                if (color == COLOR.BLACK)
                     return "♘";
                 else
                     return "♞";

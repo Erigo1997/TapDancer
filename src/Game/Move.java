@@ -15,4 +15,8 @@ public class Move {
         this.target = target;
         this.special = special;
     }
+
+    public String toString() {
+        return subject + " moved from " + fromY + "," + fromX + " to " + toY + "," + toX;
+    }
 }

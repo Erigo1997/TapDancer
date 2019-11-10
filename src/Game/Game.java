@@ -20,11 +20,7 @@ public class Game {
         board.setStandardBoard();
 
         // Initialize tapdancer.
-        tapDancer = new AIMain();
-
-        // TODO: Remove test code.
-        Evaluator e = new Evaluator();
-        e.evaluateBoard(board);
+        tapDancer = new AIMain(COLOR.BLACK);
 
         System.out.println("Which colour are you? (W/B)");
         String colour = input.next();
@@ -37,15 +33,20 @@ public class Game {
             System.exit(1);
         }
 
+        // Initialize tapdancer.
+        tapDancer = new AIMain(computerColour);
+
         COLOR currentColor = COLOR.WHITE;
+        Move otherMove;
         while(true) {
             // Check turn.
             System.out.println(board.toString());
             if (computerColour == currentColor) {
-                tapDancer.makeMove(board);
+                otherMove = tapDancer.makeMove(board);
+                // TODO: Play TapDancer's move.
             } else {
                 Move move = askPlayerMove();
-                playMove(move);
+                board.playMove(move);
             }
 
             currentColor = (currentColor == COLOR.WHITE) ? COLOR.BLACK : COLOR.WHITE;
@@ -66,16 +67,4 @@ public class Game {
         return new Move(x1, y1, x2, y2, board.getPiece(x1, y1), board.getPiece(x2, y2), false);
     }
 
-    public void playMove(Move move){
-        board.setPiece(move.fromX, move.fromY, null);
-        board.setPiece(move.toX, move.toY, move.subject);
-    }
-
-    public void reverseMove(Move move){
-        if (move.target != null)
-            board.setPiece(move.toX, move.toY, move.target);
-        else
-            board.setPiece(move.toX, move.toY, null);
-        board.setPiece(move.fromX, move.fromY, move.subject);
-    }
 }
