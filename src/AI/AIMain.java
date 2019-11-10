@@ -24,13 +24,17 @@ public class AIMain {
         evaluator = new Evaluator();
 
         // If we are black, we should flip the Evaluator.
-        if (myColor == COLOR.BLACK)
-            evaluator.flipBoard();
+        if (myColor == COLOR.BLACK){
+            //flip eval
+        }
+
 
     }
 
     // Making a move.
     public Move makeMove(Board board) {
+
+
 
         // Time to tap on some fools.
         this.board = board;
@@ -39,6 +43,7 @@ public class AIMain {
         firstState.beta = 999999;
         firstState.depth = 0;
         firstState.turnColor = myColor;
+        evaluator.evaluateBoard(board, generator, firstState.turnColor);
 
         // Let's reset the stattracker.
         StatTracker.getInstance().iterations = 0;

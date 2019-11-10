@@ -27,6 +27,10 @@ public class Board {
         setPiece(move.toX, move.toY, move.subject);
     }
 
+    public Field[][] getBoard(){
+        return board;
+    }
+
     public void reverseMove(Move move){
         if (move.target != null)
             setPiece(move.toX, move.toY, move.target);
