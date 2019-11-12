@@ -10,12 +10,12 @@ import java.util.List;
 
 public class AIMain {
 
-    final int maxDepth = 6; // How many moves to search into.
-    Board board;
-    COLOR myColor;
-    Move returnMove; // Set in Search in larger scope for practical reasons. Is the move we would like to return.
-    MoveGenerator generator;
-    Evaluator evaluator;
+    static final int maxDepth = 2; // How many moves to search into.
+    private Board board;
+    private COLOR myColor;
+    private Move returnMove; // Set in Search in larger scope for practical reasons. Is the move we would like to return.
+    private MoveGenerator generator;
+    private Evaluator evaluator;
 
     // Constructor with color.
     public AIMain(COLOR color) {
@@ -48,14 +48,19 @@ public class AIMain {
         for (int i = 0; i < StatTracker.getInstance().depthIterations.length; i++) {
             System.out.println("Depth[" + i + "]: " + StatTracker.getInstance().depthIterations[i]);
         }
+        StatTracker.getInstance().compare();
+        System.out.println("Compared to no pruning/eval, this was: ");
+        for (int i = 0; i < StatTracker.getInstance().differenceIterations.length; i++) {
+            System.out.println("Depth[" + i + "]: " + StatTracker.getInstance().differenceIterations[i] + "% more effective.");
+        }
 
-        return null;
+        return returnMove;
     }
 
 
-    private int search(State state) {
+    private float search(State state) {
 
-        // Let's update the stattracker on the latest news.
+        // Let's update the StatTracker on the latest news.
         StatTracker.getInstance().iterations++;
         StatTracker.getInstance().depthIterations[state.depth]++;
 
@@ -66,9 +71,9 @@ public class AIMain {
         // ----------- Check if there are any moves left. If not, let's go back. -----------
 
         // ----------- Initiliaze our auxiliary variables instead of doing it in code ---------
-        int value;
+        float value;
         State newState;
-        boolean isMax = state.turnColor == myColor; // Are we Max-searching or Min-searching? Self is maxsearching.
+        boolean isMax = state.turnColor == myColor; // Are we Max-searching or Min-searching? Self is Maxsearching.
         // ----------- Search all moves with alpha beta pruning -------------
         // Check that depth hasn't exceeded max depth.
         if (state.depth < maxDepth) {
@@ -91,7 +96,6 @@ public class AIMain {
                             }
                             newState = new State();
                             // TODO: Reconsider - do states really need to contain moves?
-                            newState.move = move;
                             newState.depth = state.depth + 1;
                             newState.alpha = state.alpha;
                             newState.beta = state.beta;
@@ -123,7 +127,7 @@ public class AIMain {
             }
         }
         // TODO: Evaluate the state here. Test evaluation for speed. Depth 6 took about 10 seconds with no evaluation - or pruning! Depth 7 never seems to finish.
-        return 0;
+        return evaluator.evaluateBoard(board, state.depth);
     }
 
 }

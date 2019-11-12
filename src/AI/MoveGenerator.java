@@ -58,7 +58,7 @@ public class MoveGenerator {
                         output.add(new Move(x, y, x2, y2, piece, null, false));
                         // Check if it can move forward twice.
                         y2 = y + 2;
-                        if (checkExists(x2, y) && board.getPiece(x2, y2) == null) {
+                        if (y == 0 && checkExists(x2, y2) && board.getPiece(x2, y2) == null) {
                             output.add(new Move(x, y, x2, y2, piece, null, false));
                         }
                     }
@@ -66,7 +66,7 @@ public class MoveGenerator {
                     x2 = x - 1;
                     y2 = y + 1;
                     if (checkExists(x2, y2)) {
-                        if (board.getPiece(x2, y2) != null && board.getPiece(x2, y2).color == COLOR.WHITE) {
+                        if (board.getPiece(x2, y2) != null && board.getPiece(x2, y2).color == COLOR.BLACK) {
                             output.add(new Move(x, y , x2, y2, piece, board.getPiece(x2, y2), false));
                         }
                     }
@@ -75,7 +75,7 @@ public class MoveGenerator {
                     y2 = y + 1;
                     // Now up and to the right.
                     if (checkExists(x2, y2)) {
-                        if (board.getPiece(x2, y2) != null && board.getPiece(x2, y2).color == COLOR.WHITE) {
+                        if (board.getPiece(x2, y2) != null && board.getPiece(x2, y2).color == COLOR.BLACK) {
                             output.add(new Move(x, y , x2, y2, piece, board.getPiece(x2, y2), false));
                         }
                     }
@@ -88,7 +88,7 @@ public class MoveGenerator {
                         output.add(new Move(x, y, x2, y2, piece, null, false));
                         // Check if it can move forward twice.
                         y2 = y - 2;
-                        if (checkExists(x2, y) && board.getPiece(x2, y2) == null) {
+                        if (y == 7 && checkExists(x2, y2) && board.getPiece(x2, y2) == null) {
                             output.add(new Move(x, y, x2, y2, piece, null, false));
                         }
                     }
@@ -208,7 +208,7 @@ public class MoveGenerator {
                 // Down-Right
                 x2 = x;
                 y2 = y;
-                while (checkExists(--x2, --y2)) {
+                while (checkExists(++x2, --y2)) {
                     if (scanField(piece, piece.color, x, y, x2, y2, output)) break;
                 }
                 // Let's check the four cardinal directions.

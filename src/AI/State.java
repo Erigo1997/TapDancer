@@ -4,7 +4,7 @@ import Enumerators.COLOR;
 import Game.Move;
 
 public class State {
-    int alpha, beta, depth;
+    float alpha, beta;
+    int depth;
     COLOR turnColor;
-    Move move;
 }

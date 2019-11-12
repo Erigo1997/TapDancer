@@ -18,14 +18,6 @@ public class Evaluator {
     COLOR myColor;
     MoveGenerator generator;
 
-    // TODO: Remove test main in evaluator.
-    public static void main(String[] args) {
-        Evaluator evaluator = new Evaluator(COLOR.WHITE);
-        Board testBoard = new Board();
-        testBoard.setStandardBoard();
-        System.out.println(testBoard.toString());
-        System.out.println("Testing board: " + evaluator.evaluateBoard(testBoard, 1));
-    }
 
     public Evaluator(COLOR myColor) {
         this.myColor = myColor;
@@ -46,7 +38,7 @@ public class Evaluator {
                 if (piece == null) // We don't care about empty fields.
                     continue;
                 // First we sum up pieces for a total value. This is the most basic evaluation function.
-                System.out.println("Checking piece: " + piece);
+                // System.out.println("Checking piece: " + piece);
                 List<Move> moves = generator.getMoves(board, piece, x, y);
                 switch(piece.type) {
                     case KING:
@@ -114,7 +106,7 @@ public class Evaluator {
                 // TODO: Check for threatened pieces
                 // TODO: Check for endgame
                 // TODO: Check for chess-mate-finale
-                System.out.println("Eval: " + evalSum);
+                // System.out.println("Eval: " + evalSum);
             }
         }
         return evalSum;
