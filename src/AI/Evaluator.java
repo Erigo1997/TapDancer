@@ -24,7 +24,7 @@ public class Evaluator {
         Board testBoard = new Board();
         testBoard.setStandardBoard();
         System.out.println(testBoard.toString());
-        System.out.println("Testing board: " + evaluator.evaluateBoard(testBoard));
+        System.out.println("Testing board: " + evaluator.evaluateBoard(testBoard, 1));
     }
 
     public Evaluator(COLOR myColor) {
@@ -36,7 +36,8 @@ public class Evaluator {
     }
 
     // Return evaluation. Add up value from own pieces, remove value for opponent pieces.
-    public float evaluateBoard(Board board) {
+    // Depth is necessary for King evaluation.
+    public float evaluateBoard(Board board, int depth) {
         float evalSum = 0;
         float pieceValue;
         for (int y = 1; y <= 8; y++) {
@@ -49,10 +50,11 @@ public class Evaluator {
                 List<Move> moves = generator.getMoves(board, piece, x, y);
                 switch(piece.type) {
                     case KING:
+                        pieceValue = 10000 - 100 * depth;
                         if (piece.color ==  myColor)
-                            evalSum += 10000; // TODO: Add -100 per 'depths in' we are.
+                            evalSum += pieceValue;
                         else
-                            evalSum -= 10000;
+                            evalSum -= pieceValue;
                         break;
                     case QUEEN:
                         pieceValue = 900 + 1 * moves.size();

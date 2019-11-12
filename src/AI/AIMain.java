@@ -21,12 +21,7 @@ public class AIMain {
     public AIMain(COLOR color) {
         myColor = color;
         generator = new MoveGenerator();
-        evaluator = new Evaluator();
-
-        // If we are black, we should flip the Evaluator.
-        if (myColor == COLOR.BLACK)
-            evaluator.flipBoard();
-
+        evaluator = new Evaluator(color);
     }
 
     // Making a move.
@@ -83,7 +78,7 @@ public class AIMain {
                     // If the field contains a piece whose turn it is
                     if (board.getPiece(x, y) != null && board.getPiece(x, y).color == state.turnColor) {
                         // Then let's search all valid moves.
-                        List<Move> moves = generator.getMoves(board, board.getPiece(x, y), state.turnColor, x, y);
+                        List<Move> moves = generator.getMoves(board, board.getPiece(x, y), x, y);
                         for (Move move: moves) {
                             // If alpha is larger than beta, return.
                             // TODO: Can we add some stat-tracking here?

@@ -12,7 +12,7 @@ public class Board {
 
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
-                // Black/White logic.
+                // Black/White fields logic.
                 if ((i % 2 == 0 && j % 2 == 0) || (i % 2 == 1 && j % 2 == 1)) {
                     board[i][j] = new Field(COLOR.BLACK);
                 } else {
