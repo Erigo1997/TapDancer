@@ -42,7 +42,7 @@ public class MoveGenerator {
     }
 
     // Returns a list of available moves for a piece. Remember to set the board.
-    public List<Move> getMoves(Board newBoard, Piece piece, COLOR turnColor, int x, int y) {
+    public List<Move> getMoves(Board newBoard, Piece piece, int x, int y) {
         this.board = newBoard;
         int x2, y2;
         List<Move> output = new ArrayList<Move>();
@@ -50,7 +50,7 @@ public class MoveGenerator {
             // For a pawn.
             case PAWN:
                 // If the pawn is white. Inverted moves (downward) if the pawn is black
-                if (turnColor == COLOR.WHITE) {
+                if (piece.color == COLOR.WHITE) {
                     // Check if it can simply move forward.
                     x2 = x;
                     y2 = y + 1;
@@ -58,7 +58,7 @@ public class MoveGenerator {
                         output.add(new Move(x, y, x2, y2, piece, null, false));
                         // Check if it can move forward twice.
                         y2 = y + 2;
-                        if (checkExists(x2, y) && board.getPiece(x2, y2) == null) {
+                        if (y == 0 && checkExists(x2, y2) && board.getPiece(x2, y2) == null) {
                             output.add(new Move(x, y, x2, y2, piece, null, false));
                         }
                     }
@@ -66,7 +66,7 @@ public class MoveGenerator {
                     x2 = x - 1;
                     y2 = y + 1;
                     if (checkExists(x2, y2)) {
-                        if (board.getPiece(x2, y2) != null && board.getPiece(x2, y2).color == COLOR.WHITE) {
+                        if (board.getPiece(x2, y2) != null && board.getPiece(x2, y2).color == COLOR.BLACK) {
                             output.add(new Move(x, y , x2, y2, piece, board.getPiece(x2, y2), false));
                         }
                     }
@@ -75,7 +75,7 @@ public class MoveGenerator {
                     y2 = y + 1;
                     // Now up and to the right.
                     if (checkExists(x2, y2)) {
-                        if (board.getPiece(x2, y2) != null && board.getPiece(x2, y2).color == COLOR.WHITE) {
+                        if (board.getPiece(x2, y2) != null && board.getPiece(x2, y2).color == COLOR.BLACK) {
                             output.add(new Move(x, y , x2, y2, piece, board.getPiece(x2, y2), false));
                         }
                     }
@@ -88,7 +88,7 @@ public class MoveGenerator {
                         output.add(new Move(x, y, x2, y2, piece, null, false));
                         // Check if it can move forward twice.
                         y2 = y - 2;
-                        if (checkExists(x2, y) && board.getPiece(x2, y2) == null) {
+                        if (y == 7 && checkExists(x2, y2) && board.getPiece(x2, y2) == null) {
                             output.add(new Move(x, y, x2, y2, piece, null, false));
                         }
                     }
@@ -116,14 +116,14 @@ public class MoveGenerator {
                 y2 = y;
 
                 // We check all nine fields around the king. We start at upwards and go with the clock.
-                if (checkExists(x, y + 1)) scanField(piece, turnColor, x, y, x, y + 1, output);
-                if (checkExists(x + 1, y + 1)) scanField(piece, turnColor, x, y, x + 1, y + 1, output);
-                if (checkExists(x + 1, y)) scanField(piece, turnColor, x, y, x + 1, y, output);
-                if (checkExists(x + 1, y - 1)) scanField(piece, turnColor, x, y, x + 1, y - 1, output);
-                if (checkExists(x, y - 1)) scanField(piece, turnColor, x, y, x, y - 1, output);
-                if (checkExists(x - 1, y - 1)) scanField(piece, turnColor, x, y, x - 1, y - 1, output);
-                if (checkExists(x - 1, y)) scanField(piece, turnColor, x, y, x - 1, y, output);
-                if (checkExists(x - 1, y + 1)) scanField(piece, turnColor, x, y, x - 1, y + 1, output);
+                if (checkExists(x, y + 1)) scanField(piece, piece.color, x, y, x, y + 1, output);
+                if (checkExists(x + 1, y + 1)) scanField(piece, piece.color, x, y, x + 1, y + 1, output);
+                if (checkExists(x + 1, y)) scanField(piece, piece.color, x, y, x + 1, y, output);
+                if (checkExists(x + 1, y - 1)) scanField(piece, piece.color, x, y, x + 1, y - 1, output);
+                if (checkExists(x, y - 1)) scanField(piece, piece.color, x, y, x, y - 1, output);
+                if (checkExists(x - 1, y - 1)) scanField(piece, piece.color, x, y, x - 1, y - 1, output);
+                if (checkExists(x - 1, y)) scanField(piece, piece.color, x, y, x - 1, y, output);
+                if (checkExists(x - 1, y + 1)) scanField(piece, piece.color, x, y, x - 1, y + 1, output);
                 break;
             case KNIGHT:
                 // We check in a windmill from the upwards-right movement and around the clock. Just trust me.
@@ -133,56 +133,56 @@ public class MoveGenerator {
                 y2 = y;
                 x2 += 1;
                 y2 += 2;
-                if (checkExists(x2, y2)) scanField(piece, turnColor, x, y, x2, y2, output);
+                if (checkExists(x2, y2)) scanField(piece, piece.color, x, y, x2, y2, output);
 
                 // Right-Up
                 x2 = x;
                 y2 = y;
                 x2 += 2;
                 y2 += 1;
-                if (checkExists(x2, y2)) scanField(piece, turnColor, x, y, x2, y2, output);
+                if (checkExists(x2, y2)) scanField(piece, piece.color, x, y, x2, y2, output);
 
                 // Right-Down
                 x2 = x;
                 y2 = y;
                 x2 += 2;
                 y2 -= 1;
-                if (checkExists(x2, y2)) scanField(piece, turnColor, x, y, x2, y2, output);
+                if (checkExists(x2, y2)) scanField(piece, piece.color, x, y, x2, y2, output);
 
                 // Down-Right
                 x2 = x;
                 y2 = y;
                 x2 += 1;
                 y2 -= 2;
-                if (checkExists(x2, y2)) scanField(piece, turnColor, x, y, x2, y2, output);
+                if (checkExists(x2, y2)) scanField(piece, piece.color, x, y, x2, y2, output);
 
                 // Down-Left
                 x2 = x;
                 y2 = y;
                 x2 -= 1;
                 y2 -= 2;
-                if (checkExists(x2, y2)) scanField(piece, turnColor, x, y, x2, y2, output);
+                if (checkExists(x2, y2)) scanField(piece, piece.color, x, y, x2, y2, output);
 
                 // Left-Down
                 x2 = x;
                 y2 = y;
                 x2 -= 2;
                 y2 -= 1;
-                if (checkExists(x2, y2)) scanField(piece, turnColor, x, y, x2, y2, output);
+                if (checkExists(x2, y2)) scanField(piece, piece.color, x, y, x2, y2, output);
 
                 // Left-Up
                 x2 = x;
                 y2 = y;
                 x2 -= 2;
                 y2 += 1;
-                if (checkExists(x2, y2)) scanField(piece, turnColor, x, y, x2, y2, output);
+                if (checkExists(x2, y2)) scanField(piece, piece.color, x, y, x2, y2, output);
 
                 // Up-Left
                 x2 = x;
                 y2 = y;
                 x2 -= 1;
                 y2 += 2;
-                if (checkExists(x2, y2)) scanField(piece, turnColor, x, y, x2, y2, output);
+                if (checkExists(x2, y2)) scanField(piece, piece.color, x, y, x2, y2, output);
                 break;
             case QUEEN:
                 // --- An amalgamation of both rooks and bishops.
@@ -191,50 +191,50 @@ public class MoveGenerator {
                 x2 = x;
                 y2 = y;
                 while (checkExists(--x2, ++y2)) {
-                    if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
+                    if (scanField(piece, piece.color, x, y, x2, y2, output)) break;
                 }
                 // Up-Right.
                 x2 = x;
                 y2 = y;
                 while (checkExists(++x2, ++y2)) {
-                    if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
+                    if (scanField(piece, piece.color, x, y, x2, y2, output)) break;
                 }
                 // Down-Left
                 x2 = x;
                 y2 = y;
                 while (checkExists(--x2, --y2)) {
-                    if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
+                    if (scanField(piece, piece.color, x, y, x2, y2, output)) break;
                 }
                 // Down-Right
                 x2 = x;
                 y2 = y;
-                while (checkExists(--x2, --y2)) {
-                    if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
+                while (checkExists(++x2, --y2)) {
+                    if (scanField(piece, piece.color, x, y, x2, y2, output)) break;
                 }
                 // Let's check the four cardinal directions.
                 // Left.
                 x2 = x;
                 y2 = y;
                 while (checkExists(--x2, y2)) {
-                    if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
+                    if (scanField(piece, piece.color, x, y, x2, y2, output)) break;
                 }
                 // Right.
                 x2 = x;
                 y2 = y;
                 while (checkExists(++x2, y2)) {
-                    if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
+                    if (scanField(piece, piece.color, x, y, x2, y2, output)) break;
                 }
                 // Up.
                 x2 = x;
                 y2 = y;
                 while (checkExists(x2, ++y2)) {
-                    if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
+                    if (scanField(piece, piece.color, x, y, x2, y2, output)) break;
                 }
                 // Down
                 x2 = x;
                 y2 = y;
                 while (checkExists(x2, --y2)) {
-                    if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
+                    if (scanField(piece, piece.color, x, y, x2, y2, output)) break;
                 }
                 break;
             case BISHOP:
@@ -243,25 +243,25 @@ public class MoveGenerator {
                 x2 = x;
                 y2 = y;
                 while (checkExists(--x2, ++y2)) {
-                    if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
+                    if (scanField(piece, piece.color, x, y, x2, y2, output)) break;
                 }
                 // Up-Right.
                 x2 = x;
                 y2 = y;
                 while (checkExists(++x2, ++y2)) {
-                    if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
+                    if (scanField(piece, piece.color, x, y, x2, y2, output)) break;
                 }
                 // Down-Left
                 x2 = x;
                 y2 = y;
                 while (checkExists(--x2, --y2)) {
-                    if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
+                    if (scanField(piece, piece.color, x, y, x2, y2, output)) break;
                 }
                 // Down-Right
                 x2 = x;
                 y2 = y;
                 while (checkExists(--x2, --y2)) {
-                    if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
+                    if (scanField(piece, piece.color, x, y, x2, y2, output)) break;
                 }
                 break;
             case ROOK:
@@ -270,25 +270,25 @@ public class MoveGenerator {
                 x2 = x;
                 y2 = y;
                 while (checkExists(--x2, y2)) {
-                    if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
+                    if (scanField(piece, piece.color, x, y, x2, y2, output)) break;
                 }
                 // Right.
                 x2 = x;
                 y2 = y;
                 while (checkExists(++x2, y2)) {
-                    if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
+                    if (scanField(piece, piece.color, x, y, x2, y2, output)) break;
                 }
                 // Up.
                 x2 = x;
                 y2 = y;
                 while (checkExists(x2, ++y2)) {
-                    if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
+                    if (scanField(piece, piece.color, x, y, x2, y2, output)) break;
                 }
                 // Down
                 x2 = x;
                 y2 = y;
                 while (checkExists(x2, --y2)) {
-                    if (scanField(piece, turnColor, x, y, x2, y2, output)) break;
+                    if (scanField(piece, piece.color, x, y, x2, y2, output)) break;
                 }
                 break;
         }
