@@ -12,9 +12,6 @@ public class StatTracker {
 
     public void resetDepthIterations() {
         depthIterations = new int[AIMain.maxDepth + 1];
-        for (int i = 0; i < depthIterations.length; i++) {
-            depthIterations[i] = 0;
-        }
     }
 
     // TODO: Method to compare depthIterations against DefaultIterations.

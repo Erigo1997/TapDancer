@@ -8,9 +8,10 @@ public class Move implements Comparable<Move> {
     int moveValue; // Each move now has a value to determine where in the priorityqueue it should lie.
     // TODO: implement a usage of moveValue
     // Value 10 = normal move.
+    // Value 33 = Player move.
     // Value 50 = A move that beats another piece.
 
-    public Move(int fromX, int fromY, int toX, int toY, Piece subject, Piece target, boolean special) {
+    public Move(int fromX, int fromY, int toX, int toY, Piece subject, Piece target, boolean special, int moveValue) {
         this.fromX = fromX;
         this.fromY = fromY;
         this.toX = toX;

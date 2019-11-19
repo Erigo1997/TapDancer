@@ -84,8 +84,7 @@ public class Evaluator {
                         distances.add(distance3);
                         distances.add(distance4);
                         //return lowest distance
-                        //System.out.print(300 + 3 * distances.indexOf(Collections.min(distances)));
-                        pieceValue = 300 + 3 * distances.indexOf(Collections.min(distances));
+                        pieceValue = 300 + 3 * Collections.min(distances);
                         if (piece.color ==  myColor)
                             evalSum += pieceValue;
                         else

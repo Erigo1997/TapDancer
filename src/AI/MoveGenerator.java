@@ -27,11 +27,11 @@ public class MoveGenerator {
         // TODO: Get rid of moves that don't protect the king.
         // If the spot is empty, that's a move.
         if (board.getPiece(x2, y2) == null) {
-            output.add(new Move(x, y, x2, y2, piece, null, false));
+            output.add(new Move(x, y, x2, y2, piece, null, false, 10));
         } else {
             // If the spot is occupied by an enemy, that's a move.
             if (board.getPiece(x2, y2).color != turnColor) {
-                output.add(new Move(x, y, x2, y2, piece, board.getPiece(x2, y2), false));
+                output.add(new Move(x, y, x2, y2, piece, board.getPiece(x2, y2), false, 50));
                 return true;
             } else {
                 // Otherwise it ain't no move.
@@ -55,11 +55,11 @@ public class MoveGenerator {
                     x2 = x;
                     y2 = y + 1;
                     if (checkExists(x2, y2) && board.getPiece(x2, y2) == null) {
-                        output.add(new Move(x, y, x2, y2, piece, null, false));
+                        output.add(new Move(x, y, x2, y2, piece, null, false, 10));
                         // Check if it can move forward twice.
                         y2 = y + 2;
                         if (y == 0 && checkExists(x2, y2) && board.getPiece(x2, y2) == null) {
-                            output.add(new Move(x, y, x2, y2, piece, null, false));
+                            output.add(new Move(x, y, x2, y2, piece, null, false, 10));
                         }
                     }
                     // Let's check if we can beat down anyone. First up and to the left.
@@ -67,7 +67,7 @@ public class MoveGenerator {
                     y2 = y + 1;
                     if (checkExists(x2, y2)) {
                         if (board.getPiece(x2, y2) != null && board.getPiece(x2, y2).color == COLOR.BLACK) {
-                            output.add(new Move(x, y , x2, y2, piece, board.getPiece(x2, y2), false));
+                            output.add(new Move(x, y , x2, y2, piece, board.getPiece(x2, y2), false, 50));
                         }
                     }
 
@@ -76,7 +76,7 @@ public class MoveGenerator {
                     // Now up and to the right.
                     if (checkExists(x2, y2)) {
                         if (board.getPiece(x2, y2) != null && board.getPiece(x2, y2).color == COLOR.BLACK) {
-                            output.add(new Move(x, y , x2, y2, piece, board.getPiece(x2, y2), false));
+                            output.add(new Move(x, y , x2, y2, piece, board.getPiece(x2, y2), false, 50));
                         }
                     }
                     // ELSE for black pawns.
@@ -85,11 +85,11 @@ public class MoveGenerator {
                     x2 = x;
                     y2 = y - 1;
                     if (checkExists(x2, y2) && board.getPiece(x2, y2) == null) {
-                        output.add(new Move(x, y, x2, y2, piece, null, false));
+                        output.add(new Move(x, y, x2, y2, piece, null, false, 10));
                         // Check if it can move forward twice.
                         y2 = y - 2;
                         if (y == 7 && checkExists(x2, y2) && board.getPiece(x2, y2) == null) {
-                            output.add(new Move(x, y, x2, y2, piece, null, false));
+                            output.add(new Move(x, y, x2, y2, piece, null, false, 10));
                         }
                     }
                     // Let's check if we can beat down anyone. First down and to the left.
@@ -97,7 +97,7 @@ public class MoveGenerator {
                     y2 = y - 1;
                     if (checkExists(x2, y2)) {
                         if (board.getPiece(x2, y2) != null && board.getPiece(x2, y2).color == COLOR.WHITE) {
-                            output.add(new Move(x, y , x2, y2, piece, board.getPiece(x2, y2), false));
+                            output.add(new Move(x, y , x2, y2, piece, board.getPiece(x2, y2), false, 50));
                         }
                     }
 
@@ -106,7 +106,7 @@ public class MoveGenerator {
                     // Now down and to the right.
                     if (checkExists(x2, y2)) {
                         if (board.getPiece(x2, y2) != null && board.getPiece(x2, y2).color == COLOR.WHITE) {
-                            output.add(new Move(x, y , x2, y2, piece, board.getPiece(x2, y2), false));
+                            output.add(new Move(x, y , x2, y2, piece, board.getPiece(x2, y2), false, 50));
                         }
                     }
                 }

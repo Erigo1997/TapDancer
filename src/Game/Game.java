@@ -103,7 +103,7 @@ public class Game {
         y1 = input.nextInt();
         x2 = input.nextInt();
         y2 = input.nextInt();
-        return new Move(x1, y1, x2, y2, board.getPiece(x1, y1), board.getPiece(x2, y2), false);
+        return new Move(x1, y1, x2, y2, board.getPiece(x1, y1), board.getPiece(x2, y2), false, 33);
     }
 
     // TODO: Remove test main.
