@@ -12,11 +12,10 @@ import java.util.List;
 
 public class Evaluator {
 
-    public int[][] pawnFieldValueBlack;
-    public int[][] pawnFieldValueWhite;
-    public static int[] pawnLine = {-2, 0, 3, 4, 5, 1, -2, -2};
-    COLOR myColor;
-    MoveGenerator generator;
+    private int[][] pawnFieldValueBlack;
+    private int[][] pawnFieldValueWhite;
+    private COLOR myColor;
+    private MoveGenerator generator;
 
 
     public Evaluator(COLOR myColor) {
@@ -42,7 +41,7 @@ public class Evaluator {
                 List<Move> moves = generator.getMoves(board, piece, x, y);
                 switch(piece.type) {
                     case KING:
-                        pieceValue = 10000 - 100 * depth;
+                        pieceValue = 100000 - 100 * depth;
                         if (piece.color ==  myColor)
                             evalSum += pieceValue;
                         else
@@ -113,7 +112,7 @@ public class Evaluator {
     }
 
     // Sets up all the pawn values. Should only be called in constructor.
-    public void setPawnFieldValue() {
+    private void setPawnFieldValue() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (i == 0 || i == 7) {

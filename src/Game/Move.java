@@ -17,6 +17,9 @@ public class Move {
     }
 
     public String toString() {
-        return subject + " moved from " + fromY + "," + fromX + " to " + toY + "," + toX;
+        String output = subject + " moved from " + fromX + "," + fromY + " to " + toX + "," + toY;
+        if (target != null)
+            output += " beating a " + target;
+        return output;
     }
 }

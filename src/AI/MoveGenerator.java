@@ -25,6 +25,7 @@ public class MoveGenerator {
 
     // Adds moves to the output unless the spot is occupied by allies.
     private boolean scanField(Piece piece, COLOR turnColor, int x, int y, int x2, int y2, List<Move> output) {
+        // TODO: Get rid of moves that don't protect the king.
         // If the spot is empty, that's a move.
         if (board.getPiece(x2, y2) == null) {
             output.add(new Move(x, y, x2, y2, piece, null, false));

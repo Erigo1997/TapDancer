@@ -43,6 +43,7 @@ public class Game {
                 System.out.println("TapDancer is now making a move.");
                 otherMove = tapDancer.makeMove(board);
                 board.playMove(otherMove);
+                System.out.println(otherMove);
             } else {
                 Move move = askPlayerMove();
                 board.playMove(move);

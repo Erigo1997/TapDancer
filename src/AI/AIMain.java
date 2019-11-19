@@ -10,7 +10,7 @@ import java.util.List;
 
 public class AIMain {
 
-    static final int maxDepth = 2; // How many moves to search into.
+    static final int maxDepth = 5; // How many moves to search into.
     private Board board;
     private COLOR myColor;
     private Move returnMove; // Set in Search in larger scope for practical reasons. Is the move we would like to return.
@@ -39,10 +39,14 @@ public class AIMain {
         StatTracker.getInstance().iterations = 0;
         StatTracker.getInstance().resetDepthIterations();
 
+        StatTracker.getInstance().resetTime();
+
         // TODO: We need to return a move somehow. Otherwise this is kind of silly.
         search(firstState);
 
+
         // Let's see how that went!
+        System.out.println("Searching took: " + StatTracker.getInstance().getTime() + " seconds.");
         System.out.println("TapDancer searched a whopping " + StatTracker.getInstance().iterations + " different states.");
         System.out.println("TapDancer searched on following depths: ");
         for (int i = 0; i < StatTracker.getInstance().depthIterations.length; i++) {
@@ -56,7 +60,6 @@ public class AIMain {
 
         return returnMove;
     }
-
 
     private float search(State state) {
 
@@ -76,29 +79,30 @@ public class AIMain {
         boolean isMax = state.turnColor == myColor; // Are we Max-searching or Min-searching? Self is Maxsearching.
         // ----------- Search all moves with alpha beta pruning -------------
         // Check that depth hasn't exceeded max depth.
-        if (state.depth < maxDepth) {
-            // Double for loop for the entire board.
+        if (state.depth >= maxDepth) {
+            // TODO: Evaluate the state here. Test evaluation for speed. Depth 6 took about 10 seconds with no evaluation - or pruning! Depth 7 never seems to finish.
+            return evaluator.evaluateBoard(board, state.depth);
+        }
+
+        if (isMax) {
+            value = -999999;
+        } else {
+            value = 999999;
+        }
+
+        // Double for loop for the entire board.
             for (int y = 1; y <= 8; y++) {
                 for (int x = 1; x <= 8; x++) {
                     // If the field contains a piece whose turn it is
                     if (board.getPiece(x, y) != null && board.getPiece(x, y).color == state.turnColor) {
                         // Then let's search all valid moves.
                         List<Move> moves = generator.getMoves(board, board.getPiece(x, y), x, y);
-                        for (Move move: moves) {
-                            // If alpha is larger than beta, return.
-                            // TODO: Can we add some stat-tracking here?
-                            if (state.alpha > state.beta) {
-                                if (isMax) {
-                                    return state.alpha;
-                                } else {
-                                    return state.beta;
-                                }
-                            }
+                        for (Move move : moves) {
                             newState = new State();
-                            // TODO: Reconsider - do states really need to contain moves?
                             newState.depth = state.depth + 1;
                             newState.alpha = state.alpha;
                             newState.beta = state.beta;
+                            newState.move = move;
                             // System.out.println(move);
                             // Set the colour to opposite.
                             if (state.turnColor == COLOR.WHITE)
@@ -107,27 +111,43 @@ public class AIMain {
                                 newState.turnColor = COLOR.WHITE;
                             // Let's alpha-beta-value-prune.
                             board.playMove(move);
-                            value = search(newState);
+                            if (isMax)
+                                value = maximize(value, search(newState));
+                            else
+                                value = minimize(value, search(newState));
                             board.reverseMove(move); // Make sure the board is reverted.
                             if (isMax) {
-                                if (value > state.alpha) {
-                                    state.alpha = value;
-                                    if (state.depth == 0) {
-                                        returnMove = move;
-                                    }
-                                }
+                                if (state.depth == 0 && value > state.alpha)
+                                    returnMove = move;
+                                state.alpha = maximize(value, state.alpha);
                             } else {
-                                if (value < state.beta) {
-                                    state.beta = value;
-                                }
+                                minimize(value, state.beta);
+                            }
+
+                            if (state.alpha >= state.beta) {
+                                return value;
                             }
                         }
                     }
                 }
             }
-        }
-        // TODO: Evaluate the state here. Test evaluation for speed. Depth 6 took about 10 seconds with no evaluation - or pruning! Depth 7 never seems to finish.
-        return evaluator.evaluateBoard(board, state.depth);
+            return value;
     }
 
+
+        private float maximize(float a, float b) {
+            if (a > b)
+                return a;
+            else
+                return b;
+        }
+
+        private float minimize(float a, float b) {
+            if (a < b)
+                return a;
+            else
+                return b;
+        }
+
 }
+
