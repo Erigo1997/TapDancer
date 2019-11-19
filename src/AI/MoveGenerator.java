@@ -7,6 +7,7 @@ import Game.Piece;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PriorityQueue;
 
 public class MoveGenerator {
 
@@ -22,7 +23,7 @@ public class MoveGenerator {
     }
 
     // Adds moves to the output unless the spot is occupied by allies.
-    private boolean scanField(Piece piece, COLOR turnColor, int x, int y, int x2, int y2, List<Move> output) {
+    private boolean scanField(Piece piece, COLOR turnColor, int x, int y, int x2, int y2, PriorityQueue<Move> output) {
         // TODO: Get rid of moves that don't protect the king.
         // If the spot is empty, that's a move.
         if (board.getPiece(x2, y2) == null) {
@@ -41,10 +42,10 @@ public class MoveGenerator {
     }
 
     // Returns a list of available moves for a piece. Remember to set the board.
-    public List<Move> getMoves(Board newBoard, Piece piece, int x, int y) {
+    public PriorityQueue<Move> getMoves(Board newBoard, Piece piece, int x, int y) {
         this.board = newBoard;
         int x2, y2;
-        List<Move> output = new ArrayList<Move>();
+        PriorityQueue<Move> output = new PriorityQueue<>();
         switch (piece.type) {
             // For a pawn.
             case PAWN:

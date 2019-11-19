@@ -9,6 +9,7 @@ import Game.Piece;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.PriorityQueue;
 
 public class Evaluator {
 
@@ -31,7 +32,7 @@ public class Evaluator {
     public float evaluateBoard(Board board, int depth) {
         float evalSum = 0;
         float pieceValue;
-        List<Move> moves;
+        PriorityQueue<Move> moves;
         for (int y = 1; y <= 8; y++) {
             for (int x = 1; x <= 8; x++) {
                 Piece piece = board.getPiece(x, y);

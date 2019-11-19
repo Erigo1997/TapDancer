@@ -5,6 +5,7 @@ import Game.Board;
 import Game.Move;
 
 import java.util.List;
+import java.util.PriorityQueue;
 
 public class AIMain {
 
@@ -120,7 +121,7 @@ public class AIMain {
                     // If the field contains a piece whose turn it is
                     if (board.getPiece(x, y) != null && board.getPiece(x, y).color == state.turnColor) {
                         // Then let's search all valid moves.
-                        List<Move> moves = generator.getMoves(board, board.getPiece(x, y), x, y);
+                        PriorityQueue<Move> moves = generator.getMoves(board, board.getPiece(x, y), x, y);
                         for (Move move : moves) {
                             newState = new State();
                             newState.depth = state.depth + 1;
