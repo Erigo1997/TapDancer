@@ -8,10 +8,13 @@ import java.util.List;
 
 public class AIMain {
 
-    static final int maxDepth = 5; // How many moves to search into.
+    public static int maxDepth = 8; // How many moves to search into.
+    public int currentMaxDepth;
+    private long maxSearchTime = 4; // How many seconds we allow the process to take at most.
     private Board board;
     private COLOR myColor;
     private Move returnMove; // Set in Search in larger scope for practical reasons. Is the move we would like to return.
+    private Move bestMove; // Works in conjuction with Returnmove. This is a temporary best move for current max depth.
     private MoveGenerator generator;
     private Evaluator evaluator;
 
@@ -39,12 +42,21 @@ public class AIMain {
 
         StatTracker.getInstance().resetTime();
 
-        search(firstState);
+        currentMaxDepth = 1;
+        while (currentMaxDepth <= maxDepth) {
+            System.out.println("Searching with depth: " + currentMaxDepth);
+            float searchResult = search(firstState);
+            if (searchResult == -999999 || searchResult == 999999) {
+                break;
+            } else {
+                returnMove = bestMove;
+            }
+            System.out.println("Best move for depth " + currentMaxDepth + " is " + bestMove);
+            currentMaxDepth++;
+        }
 
 
         // Let's see how that went!
-        System.out.println("Searching took: " + StatTracker.getInstance().getTime() + " seconds.");
-        System.out.println("TapDancer searched a whopping " + StatTracker.getInstance().iterations + " different states.");
         System.out.println("TapDancer searched on following depths: ");
         for (int i = 0; i < StatTracker.getInstance().depthIterations.length; i++) {
             System.out.println("Depth[" + i + "]: " + StatTracker.getInstance().depthIterations[i]);
@@ -54,11 +66,26 @@ public class AIMain {
         for (int i = 0; i < StatTracker.getInstance().differenceIterations.length; i++) {
             System.out.println("Depth[" + i + "]: " + StatTracker.getInstance().differenceIterations[i] + "% more effective.");
         }
+        System.out.println("TapDancer searched a whopping " + StatTracker.getInstance().iterations + " different states.");
+        System.out.println("Searching took: " + StatTracker.getInstance().getTime() + " seconds.");
 
         return returnMove;
     }
 
     private float search(State state) {
+        boolean isMax = state.turnColor == myColor; // Are we Max-searching or Min-searching? Self is Maxsearching.
+        if (StatTracker.getInstance().getTime() >= maxSearchTime) {
+            System.out.println("Braking search.");
+            if (isMax) {
+                return -999999;
+            } else {
+                return 999999;
+            }
+        }
+
+        // ----------- Check if there's time for more searching. Else it's time to go home. -----------
+
+
 
         // Let's update the StatTracker on the latest news.
         StatTracker.getInstance().iterations++;
@@ -70,14 +97,13 @@ public class AIMain {
         // TODO: Check any moves left. Probably not gonna be relevant for some time.
         // ----------- Check if there are any moves left. If not, let's go back. -----------
 
-        // ----------- Initiliaze our auxiliary variables instead of doing it in code ---------
+        // ----------- Initialize our auxiliary variables instead of doing it in code ---------
         float value;
         State newState;
         float searchValue;
-        boolean isMax = state.turnColor == myColor; // Are we Max-searching or Min-searching? Self is Maxsearching.
         // ----------- Search all moves with alpha beta pruning -------------
         // Check that depth hasn't exceeded max depth.
-        if (state.depth >= maxDepth) {
+        if (state.depth >= currentMaxDepth) {
             // TODO: Evaluate the state here. Test evaluation for speed. Depth 6 took about 10 seconds with no evaluation - or pruning! Depth 7 never seems to finish.
             return evaluator.evaluateBoard(board, state.depth);
         }
@@ -118,7 +144,7 @@ public class AIMain {
                             board.reverseMove(move); // Make sure the board is reverted.
                             if (isMax) {
                                 if (state.depth == 0 && value > state.alpha) {
-                                    returnMove = move;
+                                    bestMove = move;
                                 }
                                 state.alpha = maximize(value, state.alpha);
                             } else {
