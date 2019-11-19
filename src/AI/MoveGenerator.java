@@ -10,15 +10,13 @@ import java.util.List;
 
 public class MoveGenerator {
 
-    Board board;
+    private Board board;
 
     public boolean checkExists(int x, int y) {
         try {
             board.getPiece(x, y);
             return true;
-        } catch (NullPointerException e) {
-            return false;
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
             return false;
         }
     }

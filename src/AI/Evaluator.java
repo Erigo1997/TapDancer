@@ -31,6 +31,7 @@ public class Evaluator {
     public float evaluateBoard(Board board, int depth) {
         float evalSum = 0;
         float pieceValue;
+        List<Move> moves;
         for (int y = 1; y <= 8; y++) {
             for (int x = 1; x <= 8; x++) {
                 Piece piece = board.getPiece(x, y);
@@ -38,7 +39,6 @@ public class Evaluator {
                     continue;
                 // First we sum up pieces for a total value. This is the most basic evaluation function.
                 // System.out.println("Checking piece: " + piece);
-                List<Move> moves = generator.getMoves(board, piece, x, y);
                 switch(piece.type) {
                     case KING:
                         pieceValue = 100000 - 100 * depth;
@@ -48,13 +48,15 @@ public class Evaluator {
                             evalSum -= pieceValue;
                         break;
                     case QUEEN:
-                        pieceValue = 900 + 1 * moves.size();
+                        moves = generator.getMoves(board, piece, x, y);
+                        pieceValue = 900 + moves.size();
                         if (piece.color ==  myColor)
                             evalSum += pieceValue;
                         else
                             evalSum -= pieceValue;
                         break;
                     case ROOK:
+                        moves = generator.getMoves(board, piece, x, y);
                         pieceValue = 500 + 2 * moves.size();
                         if (piece.color ==  myColor)
                             evalSum += pieceValue;
@@ -62,6 +64,7 @@ public class Evaluator {
                             evalSum -= pieceValue;
                         break;
                     case BISHOP:
+                        moves = generator.getMoves(board, piece, x, y);
                         pieceValue = 300 + 2 * moves.size();
                         if (piece.color ==  myColor)
                             evalSum += pieceValue;

@@ -1,7 +1,6 @@
 package Game;
 
 import AI.AIMain;
-import AI.Evaluator;
 import Enumerators.COLOR;
 import Enumerators.PIECETYPE;
 

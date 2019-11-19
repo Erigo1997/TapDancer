@@ -3,9 +3,7 @@ package AI;
 import Enumerators.COLOR;
 import Game.Board;
 import Game.Move;
-import Game.Piece;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class AIMain {
@@ -41,7 +39,6 @@ public class AIMain {
 
         StatTracker.getInstance().resetTime();
 
-        // TODO: We need to return a move somehow. Otherwise this is kind of silly.
         search(firstState);
 
 
@@ -76,6 +73,7 @@ public class AIMain {
         // ----------- Initiliaze our auxiliary variables instead of doing it in code ---------
         float value;
         State newState;
+        float searchValue;
         boolean isMax = state.turnColor == myColor; // Are we Max-searching or Min-searching? Self is Maxsearching.
         // ----------- Search all moves with alpha beta pruning -------------
         // Check that depth hasn't exceeded max depth.
@@ -111,17 +109,20 @@ public class AIMain {
                                 newState.turnColor = COLOR.WHITE;
                             // Let's alpha-beta-value-prune.
                             board.playMove(move);
-                            if (isMax)
-                                value = maximize(value, search(newState));
-                            else
-                                value = minimize(value, search(newState));
+                            searchValue = search(newState);
+                            if (isMax) {
+                                value = maximize(value, searchValue);
+                            } else {
+                                value = minimize(value, searchValue);
+                            }
                             board.reverseMove(move); // Make sure the board is reverted.
                             if (isMax) {
-                                if (state.depth == 0 && value > state.alpha)
+                                if (state.depth == 0 && value > state.alpha) {
                                     returnMove = move;
+                                }
                                 state.alpha = maximize(value, state.alpha);
                             } else {
-                                minimize(value, state.beta);
+                                state.beta = minimize(value, state.beta);
                             }
 
                             if (state.alpha >= state.beta) {
@@ -136,17 +137,11 @@ public class AIMain {
 
 
         private float maximize(float a, float b) {
-            if (a > b)
-                return a;
-            else
-                return b;
+            return Math.max(a, b);
         }
 
         private float minimize(float a, float b) {
-            if (a < b)
-                return a;
-            else
-                return b;
+            return Math.min(a, b);
         }
 
 }
