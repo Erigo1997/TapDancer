@@ -9,7 +9,7 @@ import java.util.PriorityQueue;
 
 public class AIMain {
 
-    public static int maxDepth = 8; // How many moves to search into.
+    public static int maxDepth = 7; // How many moves to search into.
     public int currentMaxDepth;
     private static long maxSearchTime = 15; // How many seconds we allow the process to take at most.
     private Board board;

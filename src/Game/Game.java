@@ -57,6 +57,7 @@ public class Game {
         System.out.println(board.toString());
     }
 
+
     private void playerTurn() {
         Move move = askPlayerMove();
         board.playMove(move);
