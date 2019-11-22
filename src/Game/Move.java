@@ -19,4 +19,12 @@ public class Move {
     public String toString() {
         return subject + " moved from " + fromY + "," + fromX + " to " + toY + "," + toX;
     }
+
+    public int getToX() {
+        return toX;
+    }
+
+    public int getToY() {
+        return toY;
+    }
 }

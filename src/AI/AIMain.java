@@ -127,7 +127,7 @@ public class AIMain {
             }
         }
         // TODO: Evaluate the state here. Test evaluation for speed. Depth 6 took about 10 seconds with no evaluation - or pruning! Depth 7 never seems to finish.
-        return evaluator.evaluateBoard(board, state.depth);
+        return evaluator.evaluateBoard(board, state.depth, state.turnColor);
     }
 
 }
