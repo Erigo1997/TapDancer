@@ -43,9 +43,13 @@ public class Game {
                 System.out.println("TapDancer is now making a move.");
                 otherMove = tapDancer.makeMove(board);
                 board.playMove(otherMove);
+                otherMove.subject.moveCounter();
+                System.out.println("otherMove Print " + otherMove.subject.moveCounter);
             } else {
                 Move move = askPlayerMove();
                 board.playMove(move);
+                move.subject.moveCounter();
+                System.out.println("move print " + move.subject.moveCounter);
             }
 
             currentColor = (currentColor == COLOR.WHITE) ? COLOR.BLACK : COLOR.WHITE;

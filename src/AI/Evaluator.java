@@ -38,16 +38,28 @@ public class Evaluator {
         boolean isCheck = false;
         float evalSum = 0;
         float pieceValue;
+        boolean kingCastle = true;
+        int threatenedPieces = 0;
         int[] coord = getKing(board, color); //King coordinates
         System.out.println(coord[0] + ", " + coord[1]);
         Piece kingThreat = board.getPiece(coord[0], coord[1]); //King piece
         List<Move> kingMoves = generator.getMoves(board, kingThreat, coord[0] , coord[1]); //List of moves the king can perform
-
+        List<Move> enemyMoves = new ArrayList<Move>();
+        List<Move> alliedMoves = new ArrayList<>();
         for (int y = 1; y <= 8; y++) {
+            int myPawnColCounter = -1; //It's set to -1 so when we have double pawn it will be 1*8=8 and if triple 2*8=16.
+            int otherPawnColCounter = -1;
             for (int x = 1; x <= 8; x++) {
                 Piece piece = board.getPiece(x, y);
                 if (piece == null) // We don't care about empty fields.
                     continue;
+                if (piece.color != myColor) {
+                    enemyMoves.addAll(generator.getMoves(board, piece, x, y));
+                } else
+                {
+                    alliedMoves.addAll(generator.getMoves(board, piece, x, y));
+                }
+
                 // First we sum up pieces for a total value. This is the most basic evaluation function.
                 // System.out.println("Checking piece: " + piece);
                 List<Move> moves = generator.getMoves(board, piece, x, y);
@@ -72,6 +84,7 @@ public class Evaluator {
                         }
                     }
                 }
+
                 //Check-mate
                 if(isCheck && kingMoves.size() == 0)
                     System.out.println("Check-mate");
@@ -80,6 +93,10 @@ public class Evaluator {
                     case KING:
                         pieceValue = 10000 - 100 * depth;
                         evalSum += calcEvalPiece(piece, myColor, pieceValue);
+                        if (piece.moveCounter == 1 && (y == 3 || y == 7)) {
+                            evalSum += calcEvalPiece(piece, myColor, 16);
+                            System.out.println("Castled");
+                        }
                         break;
                     case QUEEN:
                         pieceValue = 900 + 1 * moves.size();
@@ -115,19 +132,43 @@ public class Evaluator {
                         else
                             pieceValue = 100 + pawnFieldValueBlack[y-1][x-1];
                         evalSum += calcEvalPiece(piece, myColor, pieceValue);
+                        if (piece.color ==  myColor)
+                            myPawnColCounter++;
+                        else
+                            otherPawnColCounter++;
                         break;
                     default:
                         break;
                 }
-                // TODO: Check for double-pawns
+                // TODO: Check for double-pawns: DONE
                 // TODO: Check for fortresses
                 // TODO: Check for threatened pieces
                 // TODO: Check for endgame
-                // TODO: Check for chess-mate-finale
+                // TODO: Check for chess-mate-finale:
 
+                if (myPawnColCounter > 0) {
+                    evalSum -= myPawnColCounter * 8;
+                }
+                if (otherPawnColCounter > 0)
+                    evalSum += otherPawnColCounter * 8;
             }
         }
         //System.out.println("Eval: " + evalSum);
+        for(Move enemyMove : enemyMoves) {
+            int tempX = enemyMove.getToX();
+            int tempY = enemyMove.getToY();
+            for (int i = 0; i < alliedMoves.size(); i++) {
+                Move alliedMove = alliedMoves.get(i);
+                int fromX = alliedMove.getFromX();
+                int fromY = alliedMove.getFromY();
+                if(tempX == fromX && tempY == fromY){
+                    threatenedPieces++;
+                    alliedMoves.remove(i);
+                    System.out.println(tempX + " " + fromX + " " + tempY + " " + fromY);
+                }
+            }
+        }
+        System.out.println("Number of threatened pieces" + threatenedPieces);
         return evalSum;
     }
 

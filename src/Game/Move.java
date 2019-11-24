@@ -27,4 +27,8 @@ public class Move {
     public int getToY() {
         return toY;
     }
+
+    public int getFromX() { return fromX;}
+
+    public int getFromY() { return fromY;}
 }

@@ -116,6 +116,10 @@ public class MoveGenerator {
                 y2 = y;
 
                 // We check all nine fields around the king. We start at upwards and go with the clock.
+                //The two upper if statements are for castling
+                if (checkExists(x, y + 2) && checkExists(x, y + 1)) scanField(piece, piece.color, x, y, x, y + 2, output);
+                if (checkExists(x, y - 2) && checkExists(x, y - 1) && checkExists(x, y - 3)) scanField(piece, piece.color, x, y, x, y - 2, output);
+
                 if (checkExists(x, y + 1)) scanField(piece, piece.color, x, y, x, y + 1, output);
                 if (checkExists(x + 1, y + 1)) scanField(piece, piece.color, x, y, x + 1, y + 1, output);
                 if (checkExists(x + 1, y)) scanField(piece, piece.color, x, y, x + 1, y, output);
