@@ -162,6 +162,7 @@ public class AIMain {
         } else {
             return state.beta;
         }
+      
     }
 
 }

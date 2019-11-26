@@ -39,6 +39,10 @@ public class Board {
         }
     }
 
+    public Field[][] getBoard(){
+        return board;
+    }
+
     public void reverseMove(Move move){
         if (move.target != null)
             setPiece(move.toX, move.toY, move.target);
@@ -116,4 +120,5 @@ public class Board {
         }
         return output;
     }
+
 }

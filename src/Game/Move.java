@@ -32,4 +32,16 @@ public class Move implements Comparable<Move> {
     public int compareTo(Move move) {
         return moveValue - move.moveValue;
     }
+
+    public int getToX() {
+        return toX;
+    }
+
+    public int getToY() {
+        return toY;
+    }
+
+    public int getFromX() { return fromX;}
+
+    public int getFromY() { return fromY;}
 }
