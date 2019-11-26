@@ -1,6 +1,7 @@
 package AI;
 
 import Enumerators.COLOR;
+import Enumerators.PIECETYPE;
 import Game.Board;
 import Game.Move;
 
@@ -59,6 +60,26 @@ public class AIMain {
 
         // Let's see how that went!
         printStatistics();
+
+        if (returnMove.subject.type == PIECETYPE.KING) {
+            generator.castleLegalLeft = false;
+            generator.castleLegalRight = false;
+        }
+        if (myColor == COLOR.WHITE) {
+            if (returnMove.fromY == 1 && returnMove.fromX == 1) {
+                generator.castleLegalLeft = false;
+            }
+            if (returnMove.fromY == 1 && returnMove.fromX == 8) {
+                generator.castleLegalRight = false;
+            }
+        } else {
+            if (returnMove.fromY == 8 && returnMove.fromX == 1) {
+                generator.castleLegalLeft = false;
+            }
+            if (returnMove.fromY == 8 && returnMove.fromX == 8) {
+                generator.castleLegalRight = false;
+            }
+        }
 
         return returnMove;
     }

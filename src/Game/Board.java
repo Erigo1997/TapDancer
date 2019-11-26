@@ -3,6 +3,8 @@ package Game;
 import Enumerators.COLOR;
 import Enumerators.PIECETYPE;
 
+import java.util.Scanner;
+
 public class Board {
     private Field[][] board;
 
@@ -23,19 +25,47 @@ public class Board {
     }
 
     public void playMove(Move move){
+        if (move.subject.type == PIECETYPE.KING && move.special) {
+            if (move.toX == 7) {
+                setPiece(6, move.toY, new Piece(PIECETYPE.ROOK, move.subject.color));
+                setPiece(move.toX, move.toY, move.subject);
+                setPiece(8, move.toY, null);
+            }
+            if (move.toX == 3) {
+                setPiece(4, move.toY, new Piece(PIECETYPE.ROOK, move.subject.color));
+                setPiece(move.toX, move.toY, move.subject);
+                setPiece(1, move.toY, null);
+            }
+            return;
+        }
         setPiece(move.fromX, move.fromY, null);
         setPiece(move.toX, move.toY, move.subject);
         if (move.subject.type == PIECETYPE.PAWN) {
             if (move.subject.color == COLOR.WHITE) {
                 if (move.toY == 8) {
-                    // TODO: Ask player what type of conversion they want. We assume queen.
-                    setPiece(move.toX, move.toY, new Piece(PIECETYPE.QUEEN, move.subject.color));
+                    System.out.println("Conversion in progress. Type Q for Queen, K for Knight.");
+                    setPiece(move.toX, move.toY, new Piece(askPlayerConversion(), move.subject.color));
                 }
             } else {
                 if (move.toY == 1) {
-                    setPiece(move.toX, move.toY, new Piece(PIECETYPE.QUEEN, move.subject.color));
+                    setPiece(move.toX, move.toY, new Piece(askPlayerConversion(), move.subject.color));
                 }
             }
+        }
+    }
+
+    public PIECETYPE askPlayerConversion() {
+        Scanner input = new Scanner(System.in);
+        String convert;
+        do {
+            System.out.println("Conversion in progress. Type Q for Queen, K for Knight.");
+            System.out.println("TapDancer would like a Queen.");
+            convert = input.next();
+        } while (!convert.equals("Q") && !convert.equals("K"));
+        if (convert.equals("Q")) {
+            return PIECETYPE.QUEEN;
+        } else {
+            return PIECETYPE.KNIGHT;
         }
     }
 
@@ -44,11 +74,27 @@ public class Board {
     }
 
     public void reverseMove(Move move){
+        if (move.subject.type == PIECETYPE.KING && move.special) {
+            if (move.toX == 7) {
+                setPiece(8, move.toY, new Piece(PIECETYPE.ROOK, move.subject.color));
+                setPiece(move.fromX, move.fromY, move.subject);
+                setPiece(move.toX, move.toY, null);
+                setPiece(6, move.toY, null);
+            }
+            if (move.toX == 3) {
+                setPiece(1, move.toY, new Piece(PIECETYPE.ROOK, move.subject.color));
+                setPiece(move.toX, move.toY, move.subject);
+                setPiece(move.toX, move.toY, null);
+                setPiece(4, move.toY, null);
+            }
+            return;
+        }
         if (move.target != null)
             setPiece(move.toX, move.toY, move.target);
         else
             setPiece(move.toX, move.toY, null);
         setPiece(move.fromX, move.fromY, move.subject);
+        // TODO: Create reversal for castle moves.
         /*
         if (move.subject.type == PIECETYPE.PAWN) {
             if (move.subject.color == COLOR.WHITE) {

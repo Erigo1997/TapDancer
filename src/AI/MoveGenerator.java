@@ -1,6 +1,7 @@
 package AI;
 
 import Enumerators.COLOR;
+import Enumerators.PIECETYPE;
 import Game.Board;
 import Game.Move;
 import Game.Piece;
@@ -12,6 +13,8 @@ import java.util.PriorityQueue;
 public class MoveGenerator {
 
     private Board board;
+    public boolean castleLegalLeft = true;
+    public boolean castleLegalRight = true;
 
     public boolean checkExists(int x, int y) {
         try {
@@ -112,14 +115,38 @@ public class MoveGenerator {
                 }
                 break;
             case KING:
-                x2 = x;
-                y2 = y;
+                // ~~~~~~~~~~~~~~~~~ Check Castling ~~~~~~~~~~
+                y2 = 1;
+                // Check for white first.
+                if (y == y2 && piece.color == COLOR.WHITE && x == 5) {
+                    if (board.getPiece(8, y2) != null && board.getPiece(8, y2).type == PIECETYPE.ROOK && board.getPiece(8, y2).color == piece.color) {
+                        if (board.getPiece(6, y2) == null && board.getPiece(7, y2) == null) {
+                            output.add(new Move(5, y2, 8, y2, piece, null, true, 100));
+                        }
+                    }
+                    if (board.getPiece(1, y2) != null && board.getPiece(1, y2).type == PIECETYPE.ROOK && board.getPiece(1, y2).color == piece.color) {
+                        if (board.getPiece(4, y2) == null && board.getPiece(3, y2) == null && board.getPiece(2, y2) == null) {
+                            output.add(new Move(5, y2, 1, y2, piece, null, true, 100));
+                        }
+                    }
+                }
+                // Check for black.
+                y2 = 8;
+                if (y == y2 && piece.color == COLOR.BLACK && x == 5) {
+                    if (board.getPiece(8, y2) != null && board.getPiece(8, y2).type == PIECETYPE.ROOK && board.getPiece(8, y2).color == piece.color) {
+                        if (board.getPiece(6, y2) == null && board.getPiece(7, y2) == null) {
+                            output.add(new Move(5, y2, 7, y2, piece, null, true, 100));
+                        }
+                    }
+                    if (board.getPiece(1, y2) != null && board.getPiece(1, y2).type == PIECETYPE.ROOK && board.getPiece(1, y2).color == piece.color) {
+                        if (board.getPiece(4, y2) == null && board.getPiece(3, y2) == null && board.getPiece(2, y2) == null) {
+                            output.add(new Move(5, y2, 3, y2, piece, null, true, 100));
+                        }
+                    }
+                }
+                // TODO: Fix castling.
 
                 // We check all nine fields around the king. We start at upwards and go with the clock.
-                //The two upper if statements are for castling
-                if (checkExists(x, y + 2) && checkExists(x, y + 1)) scanField(piece, piece.color, x, y, x, y + 2, output);
-                if (checkExists(x, y - 2) && checkExists(x, y - 1) && checkExists(x, y - 3)) scanField(piece, piece.color, x, y, x, y - 2, output);
-
                 if (checkExists(x, y + 1)) scanField(piece, piece.color, x, y, x, y + 1, output);
                 if (checkExists(x + 1, y + 1)) scanField(piece, piece.color, x, y, x + 1, y + 1, output);
                 if (checkExists(x + 1, y)) scanField(piece, piece.color, x, y, x + 1, y, output);
