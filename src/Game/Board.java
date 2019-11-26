@@ -12,7 +12,7 @@ public class Board {
 
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
-                // Black/White logic.
+                // Black/White fields logic.
                 if ((i % 2 == 0 && j % 2 == 0) || (i % 2 == 1 && j % 2 == 1)) {
                     board[i][j] = new Field(COLOR.BLACK);
                 } else {
@@ -25,6 +25,18 @@ public class Board {
     public void playMove(Move move){
         setPiece(move.fromX, move.fromY, null);
         setPiece(move.toX, move.toY, move.subject);
+        if (move.subject.type == PIECETYPE.PAWN) {
+            if (move.subject.color == COLOR.WHITE) {
+                if (move.toY == 8) {
+                    // TODO: Ask player what type of conversion they want. We assume queen.
+                    setPiece(move.toX, move.toY, new Piece(PIECETYPE.QUEEN, move.subject.color));
+                }
+            } else {
+                if (move.toY == 1) {
+                    setPiece(move.toX, move.toY, new Piece(PIECETYPE.QUEEN, move.subject.color));
+                }
+            }
+        }
     }
 
     public void reverseMove(Move move){
@@ -33,6 +45,21 @@ public class Board {
         else
             setPiece(move.toX, move.toY, null);
         setPiece(move.fromX, move.fromY, move.subject);
+        /*
+        if (move.subject.type == PIECETYPE.PAWN) {
+            if (move.subject.color == COLOR.WHITE) {
+                if (move.toY == 8) {
+                    setPiece(move.fromX, move.fromY, new Piece(PIECETYPE.PAWN, COLOR.WHITE));
+                }
+            } else {
+                if (move.toY == 1) {
+                    setPiece(move.fromX, move.fromY, new Piece(PIECETYPE.PAWN, COLOR.BLACK));
+                }
+            }
+        }
+
+         */
+
     }
 
     // Conversion from 1-8 to 0-7, simplifying piece placement.
