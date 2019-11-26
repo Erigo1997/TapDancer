@@ -8,12 +8,10 @@ public class StatTracker {
     public float[] differenceIterations;
     public static final int[] defaultIterations = {1, 20, 400, 9580, 218120, 5923997, 149203380}; // How many iterations it took without evaluation/pruning.
 
+    public long startTime;
 
     public void resetDepthIterations() {
         depthIterations = new int[AIMain.maxDepth + 1];
-        for (int i = 0; i < depthIterations.length; i++) {
-            depthIterations[i] = 0;
-        }
     }
 
     // TODO: Method to compare depthIterations against DefaultIterations.
@@ -37,5 +35,13 @@ public class StatTracker {
             differenceIterations[i] *= 100;
             differenceIterations[i] -= 100;
         }
+    }
+
+    public void resetTime() {
+        startTime = System.nanoTime();
+    }
+
+    public long getTime() {
+        return (System.nanoTime() - startTime) / 1000000000;
     }
 }

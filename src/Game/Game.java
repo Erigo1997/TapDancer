@@ -1,7 +1,6 @@
 package Game;
 
 import AI.AIMain;
-import AI.Evaluator;
 import Enumerators.COLOR;
 import Enumerators.PIECETYPE;
 
@@ -35,26 +34,64 @@ public class Game {
         tapDancer = new AIMain(computerColour);
 
         COLOR currentColor = COLOR.WHITE;
-        Move otherMove;
+        System.out.println(board.toString());
         while(true) {
             // Check turn.
-            System.out.println(board.toString());
             if (computerColour == currentColor) {
-                System.out.println("TapDancer is now making a move.");
-                otherMove = tapDancer.makeMove(board);
-                board.playMove(otherMove);
-                otherMove.subject.moveCounter();
-                System.out.println("otherMove Print " + otherMove.subject.moveCounter);
+                computerTurn();
             } else {
-                Move move = askPlayerMove();
-                board.playMove(move);
-                move.subject.moveCounter();
-                System.out.println("move print " + move.subject.moveCounter);
+                playerTurn();
             }
 
             currentColor = (currentColor == COLOR.WHITE) ? COLOR.BLACK : COLOR.WHITE;
         }
 
+    }
+
+    private void computerTurn() {
+        Move otherMove;
+        System.out.println("TapDancer is now making a move.");
+        otherMove = tapDancer.makeMove(board);
+        board.playMove(otherMove);
+        System.out.println(otherMove);
+        System.out.println(board.toString());
+    }
+
+
+    private void playerTurn() {
+        Move move = askPlayerMove();
+        board.playMove(move);
+        System.out.println(board.toString());
+        askPlayerNext(move);
+    }
+
+    private void askPlayerNext(Move lastMove) {
+        System.out.println("Next? (go/reverse/extra/depth)");
+        String response = input.next();
+        if (response.equals("go")) {
+            return;
+        }
+        if (response.equals("depth")) {
+            System.out.println("Which depth are we changing to, captain?");
+            int newDepth = input.nextInt();
+            tapDancer.maxDepth = newDepth;
+            System.out.println("Changing depth to " + newDepth);
+            askPlayerNext(lastMove);
+        }
+        if (response.equals("reverse")) {
+            board.reverseMove(lastMove);
+            System.out.println(board.toString());
+            askPlayerNext(null);
+            return;
+        }
+        if (response.equals("extra")) {
+            Move move = askPlayerMove();
+            board.playMove(move);
+            System.out.println(board.toString());
+            askPlayerNext(move);
+            return;
+        }
+        askPlayerNext(lastMove);
     }
 
     private Move askPlayerMove() {
@@ -67,7 +104,7 @@ public class Game {
         y1 = input.nextInt();
         x2 = input.nextInt();
         y2 = input.nextInt();
-        return new Move(x1, y1, x2, y2, board.getPiece(x1, y1), board.getPiece(x2, y2), false);
+        return new Move(x1, y1, x2, y2, board.getPiece(x1, y1), board.getPiece(x2, y2), false, 33);
     }
 
     // TODO: Remove test main.

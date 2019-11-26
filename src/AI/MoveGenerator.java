@@ -7,31 +7,31 @@ import Game.Piece;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PriorityQueue;
 
 public class MoveGenerator {
 
-    Board board;
+    private Board board;
 
     public boolean checkExists(int x, int y) {
         try {
             board.getPiece(x, y);
             return true;
-        } catch (NullPointerException e) {
-            return false;
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (NullPointerException | ArrayIndexOutOfBoundsException e) {
             return false;
         }
     }
 
     // Adds moves to the output unless the spot is occupied by allies.
-    private boolean scanField(Piece piece, COLOR turnColor, int x, int y, int x2, int y2, List<Move> output) {
+    private boolean scanField(Piece piece, COLOR turnColor, int x, int y, int x2, int y2, PriorityQueue<Move> output) {
+        // TODO: Get rid of moves that don't protect the king.
         // If the spot is empty, that's a move.
         if (board.getPiece(x2, y2) == null) {
-            output.add(new Move(x, y, x2, y2, piece, null, false));
+            output.add(new Move(x, y, x2, y2, piece, null, false, 10));
         } else {
             // If the spot is occupied by an enemy, that's a move.
             if (board.getPiece(x2, y2).color != turnColor) {
-                output.add(new Move(x, y, x2, y2, piece, board.getPiece(x2, y2), false));
+                output.add(new Move(x, y, x2, y2, piece, board.getPiece(x2, y2), false, 50));
                 return true;
             } else {
                 // Otherwise it ain't no move.
@@ -42,10 +42,10 @@ public class MoveGenerator {
     }
 
     // Returns a list of available moves for a piece. Remember to set the board.
-    public List<Move> getMoves(Board newBoard, Piece piece, int x, int y) {
+    public PriorityQueue<Move> getMoves(Board newBoard, Piece piece, int x, int y) {
         this.board = newBoard;
         int x2, y2;
-        List<Move> output = new ArrayList<Move>();
+        PriorityQueue<Move> output = new PriorityQueue<>();
         switch (piece.type) {
             // For a pawn.
             case PAWN:
@@ -55,11 +55,11 @@ public class MoveGenerator {
                     x2 = x;
                     y2 = y + 1;
                     if (checkExists(x2, y2) && board.getPiece(x2, y2) == null) {
-                        output.add(new Move(x, y, x2, y2, piece, null, false));
+                        output.add(new Move(x, y, x2, y2, piece, null, false, 10));
                         // Check if it can move forward twice.
                         y2 = y + 2;
                         if (y == 0 && checkExists(x2, y2) && board.getPiece(x2, y2) == null) {
-                            output.add(new Move(x, y, x2, y2, piece, null, false));
+                            output.add(new Move(x, y, x2, y2, piece, null, false, 10));
                         }
                     }
                     // Let's check if we can beat down anyone. First up and to the left.
@@ -67,7 +67,7 @@ public class MoveGenerator {
                     y2 = y + 1;
                     if (checkExists(x2, y2)) {
                         if (board.getPiece(x2, y2) != null && board.getPiece(x2, y2).color == COLOR.BLACK) {
-                            output.add(new Move(x, y , x2, y2, piece, board.getPiece(x2, y2), false));
+                            output.add(new Move(x, y , x2, y2, piece, board.getPiece(x2, y2), false, 50));
                         }
                     }
 
@@ -76,7 +76,7 @@ public class MoveGenerator {
                     // Now up and to the right.
                     if (checkExists(x2, y2)) {
                         if (board.getPiece(x2, y2) != null && board.getPiece(x2, y2).color == COLOR.BLACK) {
-                            output.add(new Move(x, y , x2, y2, piece, board.getPiece(x2, y2), false));
+                            output.add(new Move(x, y , x2, y2, piece, board.getPiece(x2, y2), false, 50));
                         }
                     }
                     // ELSE for black pawns.
@@ -85,11 +85,11 @@ public class MoveGenerator {
                     x2 = x;
                     y2 = y - 1;
                     if (checkExists(x2, y2) && board.getPiece(x2, y2) == null) {
-                        output.add(new Move(x, y, x2, y2, piece, null, false));
+                        output.add(new Move(x, y, x2, y2, piece, null, false, 10));
                         // Check if it can move forward twice.
                         y2 = y - 2;
                         if (y == 7 && checkExists(x2, y2) && board.getPiece(x2, y2) == null) {
-                            output.add(new Move(x, y, x2, y2, piece, null, false));
+                            output.add(new Move(x, y, x2, y2, piece, null, false, 10));
                         }
                     }
                     // Let's check if we can beat down anyone. First down and to the left.
@@ -97,7 +97,7 @@ public class MoveGenerator {
                     y2 = y - 1;
                     if (checkExists(x2, y2)) {
                         if (board.getPiece(x2, y2) != null && board.getPiece(x2, y2).color == COLOR.WHITE) {
-                            output.add(new Move(x, y , x2, y2, piece, board.getPiece(x2, y2), false));
+                            output.add(new Move(x, y , x2, y2, piece, board.getPiece(x2, y2), false, 50));
                         }
                     }
 
@@ -106,7 +106,7 @@ public class MoveGenerator {
                     // Now down and to the right.
                     if (checkExists(x2, y2)) {
                         if (board.getPiece(x2, y2) != null && board.getPiece(x2, y2).color == COLOR.WHITE) {
-                            output.add(new Move(x, y , x2, y2, piece, board.getPiece(x2, y2), false));
+                            output.add(new Move(x, y , x2, y2, piece, board.getPiece(x2, y2), false, 50));
                         }
                     }
                 }
