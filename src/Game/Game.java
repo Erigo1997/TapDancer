@@ -50,6 +50,7 @@ public class Game {
     }
 
     private void computerTurn() {
+        board.isComputerTurn = true;
         Move otherMove;
         System.out.println("TapDancer is now making a move.");
         otherMove = tapDancer.makeMove(board);
@@ -60,6 +61,7 @@ public class Game {
 
 
     private void playerTurn() {
+        board.isComputerTurn = false;
         Move move = askPlayerMove();
         board.playMove(move);
         System.out.println(board.toString());
@@ -143,23 +145,6 @@ public class Game {
 
         // Initialize tapdancer.
         AIMain tapDancer2 = new AIMain(COLOR.BLACK);
-
-        System.out.println(board.toString());
-
-        input.next();
-
-        System.out.println("TapDancer is now making a move.");
-        Move otherMove = tapDancer.makeMove(board);
-        board.playMove(otherMove);
-
-        System.out.println(board.toString());
-
-        input.next();
-
-        System.out.println("TapDancer2 is now making a move.");
-        otherMove = tapDancer2.makeMove(board);
-        board.playMove(otherMove);
-
         System.out.println(board.toString());
 
     }

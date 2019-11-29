@@ -18,7 +18,7 @@ public class AIMain {
     private Move returnMove; // Set in Search in larger scope for practical reasons. Is the move we would like to return.
     private Move bestMove; // Works in conjuction with Returnmove. This is a temporary best move for current max depth.
     private MoveGenerator generator;
-    private Evaluator evaluator;
+    public Evaluator evaluator;
 
     // Constructor with color.
     public AIMain(COLOR color) {
@@ -116,8 +116,13 @@ public class AIMain {
         StatTracker.getInstance().iterations++;
         StatTracker.getInstance().depthIterations[state.depth]++;
 
-        // TODO: Can we check a win condition here? If so, return it.
-        // --------- Win Condition
+        
+        // --------- Termination State
+        // We can check if a state is a termination state (It should stop searching) if isKingDead in Board is True.
+        // This flag is true when a king has been eliminated.
+        if (board.isKingDead) {
+            return evaluator.evaluateBoard(board, state.depth);s
+        }
 
         // TODO: Check any moves left. Probably not gonna be relevant for some time.
         // ----------- Check if there are any moves left. If not, let's go back. -----------

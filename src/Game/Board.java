@@ -7,10 +7,14 @@ import java.util.Scanner;
 
 public class Board {
     private Field[][] board;
+    public boolean isComputerTurn;
+    public boolean isKingDead; // Variable used for terminating further searching. If a king is eliminated, then we shall not search deeper.
 
     // Build a board.
     public Board() {
         board = new Field[8][8];
+
+        isKingDead = false;
 
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
@@ -30,11 +34,13 @@ public class Board {
                 setPiece(6, move.toY, new Piece(PIECETYPE.ROOK, move.subject.color));
                 setPiece(move.toX, move.toY, move.subject);
                 setPiece(8, move.toY, null);
+                setPiece(move.fromX, move.fromY, null);
             }
             if (move.toX == 3) {
                 setPiece(4, move.toY, new Piece(PIECETYPE.ROOK, move.subject.color));
                 setPiece(move.toX, move.toY, move.subject);
                 setPiece(1, move.toY, null);
+                setPiece(move.fromX, move.fromY, null);
             }
             return;
         }
@@ -43,7 +49,6 @@ public class Board {
         if (move.subject.type == PIECETYPE.PAWN) {
             if (move.subject.color == COLOR.WHITE) {
                 if (move.toY == 8) {
-                    System.out.println("Conversion in progress. Type Q for Queen, K for Knight.");
                     setPiece(move.toX, move.toY, new Piece(askPlayerConversion(), move.subject.color));
                 }
             } else {
@@ -52,11 +57,17 @@ public class Board {
                 }
             }
         }
+        if (move.target.type == PIECETYPE.KING) { // Set the king is dead after he has been a target of an attack.
+            isKingDead = true;
+        }
     }
 
     public PIECETYPE askPlayerConversion() {
         Scanner input = new Scanner(System.in);
         String convert;
+        if (isComputerTurn) {
+            return PIECETYPE.QUEEN;
+        }
         do {
             System.out.println("Conversion in progress. Type Q for Queen, K for Knight.");
             System.out.println("TapDancer would like a Queen.");
@@ -93,23 +104,12 @@ public class Board {
             setPiece(move.toX, move.toY, move.target);
         else
             setPiece(move.toX, move.toY, null);
+
         setPiece(move.fromX, move.fromY, move.subject);
-        // TODO: Create reversal for castle moves.
-        /*
-        if (move.subject.type == PIECETYPE.PAWN) {
-            if (move.subject.color == COLOR.WHITE) {
-                if (move.toY == 8) {
-                    setPiece(move.fromX, move.fromY, new Piece(PIECETYPE.PAWN, COLOR.WHITE));
-                }
-            } else {
-                if (move.toY == 1) {
-                    setPiece(move.fromX, move.fromY, new Piece(PIECETYPE.PAWN, COLOR.BLACK));
-                }
-            }
+
+        if (move.target.type == PIECETYPE.KING) { // Set the king is dead after he has been a target of an attack. - reversal.
+            isKingDead = false;
         }
-
-         */
-
     }
 
     // Conversion from 1-8 to 0-7, simplifying piece placement.
