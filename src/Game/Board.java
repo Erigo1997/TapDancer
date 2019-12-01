@@ -29,7 +29,7 @@ public class Board {
     }
 
     public void playMove(Move move){
-        if (move.subject.type == PIECETYPE.KING && move.special) {
+        if (move.subject == null && move.subject.type == PIECETYPE.KING && move.special) {
             if (move.toX == 7) {
                 setPiece(6, move.toY, new Piece(PIECETYPE.ROOK, move.subject.color));
                 setPiece(move.toX, move.toY, move.subject);

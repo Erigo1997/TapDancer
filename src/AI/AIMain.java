@@ -4,19 +4,19 @@ import Enumerators.COLOR;
 import Enumerators.PIECETYPE;
 import Game.Board;
 import Game.Move;
+import Game.Piece;
 
-import java.util.List;
 import java.util.PriorityQueue;
 
 public class AIMain {
 
-    public static int maxDepth = 7; // How many moves to search into.
+    public static int maxDepth = 5; // How many moves to search into.
     public int currentMaxDepth;
     private static long maxSearchTime = 15; // How many seconds we allow the process to take at most.
     private Board board;
     private COLOR myColor;
     private Move returnMove; // Set in Search in larger scope for practical reasons. Is the move we would like to return.
-    private Move bestMove; // Works in conjuction with Returnmove. This is a temporary best move for current max depth.
+    private Move bestMove; // Works in conjunction with Returnmove. This is a temporary best move for current max depth.
     private MoveGenerator generator;
     public Evaluator evaluator;
 
@@ -29,6 +29,9 @@ public class AIMain {
 
     // Making a move.
     public Move makeMove(Board board) {
+
+        // Set Bestmove to null to reset.
+        bestMove = null;
 
         // Let's reset the stattracker.
         StatTracker.getInstance().iterations = 0;
@@ -54,6 +57,7 @@ public class AIMain {
                 returnMove = bestMove;
             }
             System.out.println("Best move for depth " + currentMaxDepth + " is " + bestMove);
+            bestMove.moveValue = 500;
             currentMaxDepth++;
         }
 
@@ -120,9 +124,11 @@ public class AIMain {
         // --------- Termination State
         // We can check if a state is a termination state (It should stop searching) if isKingDead in Board is True.
         // This flag is true when a king has been eliminated.
+        /*
         if (board.isKingDead) {
             return evaluator.evaluateBoard(board, state.depth);
         }
+         */
 
         // TODO: Check any moves left. Probably not gonna be relevant for some time.
         // ----------- Check if there are any moves left. If not, let's go back. -----------
@@ -130,55 +136,33 @@ public class AIMain {
         // ----------- Initialize our auxiliary variables instead of doing it in loop ---------
         float value;
         State newState;
-        float searchValue;
+        Float searchValue;
+        Piece selectedPiece;
         // ----------- Search all moves with alpha beta pruning -------------
         // Check that depth hasn't exceeded max depth.
-        if (state.depth >= currentMaxDepth) {
+        if (state.depth > currentMaxDepth) {
             return evaluator.evaluateBoard(board, state.depth);
         }
 
+        // Search previously best move first if we are in depth 0.
+        /* TODO: Check if this really works as intended.
+        if (state.depth == 0 && bestMove != null) {
+            searchValue = analyzeMove(state, isMax, bestMove);
+            if (searchValue != null) return searchValue;
+        }
+         */
 
         // Double for loop for the entire board.
             for (int y = 1; y <= 8; y++) {
                 for (int x = 1; x <= 8; x++) {
                     // If the field contains a piece whose turn it is
-                    if (board.getPiece(x, y) != null && board.getPiece(x, y).color == state.turnColor) {
+                    selectedPiece = board.getPiece(x, y);
+                    if (selectedPiece != null && selectedPiece.color == state.turnColor) {
                         // Then let's search all valid moves.
-                        PriorityQueue<Move> moves = generator.getMoves(board, board.getPiece(x, y), x, y);
+                        PriorityQueue<Move> moves = generator.getMoves(board, selectedPiece, x, y);
                         for (Move move : moves) {
-                            if (state.alpha >= state.beta) {
-                                if (isMax) {
-                                    return state.alpha;
-                                } else {
-                                    return state.beta;
-                                }
-                            }
-
-                            newState = new State();
-                            newState.depth = state.depth + 1;
-                            newState.alpha = state.alpha;
-                            newState.beta = state.beta;
-                            newState.move = move;
-                            // System.out.println(move);
-                            // Set the colour to opposite.
-                            if (state.turnColor == COLOR.WHITE)
-                                newState.turnColor = COLOR.BLACK;
-                            else
-                                newState.turnColor = COLOR.WHITE;
-                            // Let's alpha-beta-value-prune.
-                            board.playMove(move);
-                            value = search(newState);
-                            board.reverseMove(move); // Make sure the board is reverted.
-
-                            if (isMax) {
-                                if (state.depth == 0 && value > state.alpha) {
-                                    bestMove = move;
-                                }
-                                state.alpha = Math.max(value, state.alpha);
-                            } else {
-                                state.beta = Math.min(value, state.beta);
-                            }
-
+                            searchValue = analyzeMove(state, isMax, move);
+                            if (searchValue != null) return searchValue;
                         }
                     }
                 }
@@ -189,6 +173,44 @@ public class AIMain {
             return state.beta;
         }
       
+    }
+
+    private Float analyzeMove(State state, boolean isMax, Move move) {
+        State newState;
+        float value;
+        if (state.alpha >= state.beta) {
+            if (isMax) {
+                return state.alpha;
+            } else {
+                return state.beta;
+            }
+        }
+
+        newState = new State();
+        newState.depth = state.depth + 1;
+        newState.alpha = state.alpha;
+        newState.beta = state.beta;
+        newState.move = move;
+        // System.out.println(move);
+        // Set the colour to opposite.
+        if (state.turnColor == COLOR.WHITE)
+            newState.turnColor = COLOR.BLACK;
+        else
+            newState.turnColor = COLOR.WHITE;
+        // Let's alpha-beta-value-prune.
+        board.playMove(move);
+        value = search(newState);
+        board.reverseMove(move); // Make sure the board is reverted.
+
+        if (isMax) {
+            if (state.depth == 0 && value > state.alpha) {
+                bestMove = move;
+            }
+            state.alpha = Math.max(value, state.alpha);
+        } else {
+            state.beta = Math.min(value, state.beta);
+        }
+        return null;
     }
 
 }

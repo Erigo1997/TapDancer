@@ -7,16 +7,12 @@ public class Piece {
 
     public PIECETYPE type;
     public COLOR color;
-    public int moveCounter;
 
     public Piece(PIECETYPE type, COLOR color) {
         this.type = type;
         this.color = color;
     }
 
-    public void moveCounter () {
-        moveCounter++;
-    }
     // Print out the piece in question.
     public String toString() {
         switch(type) {

@@ -49,10 +49,10 @@ public class Evaluator {
         PriorityQueue<Move> enemyMoves = new PriorityQueue<>();
         PriorityQueue<Move> alliedMoves = new PriorityQueue<>();
         PriorityQueue<Move> moves;
-        for (int y = 1; y <= 8; y++) {
+        for (int x = 1; x <= 8; x++) {
             int myPawnColCounter = -1; //It's set to -1 so when we have double pawn it will be 1*8=8 and if triple 2*8=16.
             int otherPawnColCounter = -1;
-            for (int x = 1; x <= 8; x++) {
+            for (int y = 1; y <= 8; y++) {
                 Piece piece = board.getPiece(x, y);
                 if (piece == null) // We don't care about empty fields.
                     continue;
@@ -103,11 +103,13 @@ public class Evaluator {
                             evalSum += pieceValue;
                         else
                             evalSum -= pieceValue;
+                        /*
                         if (piece.moveCounter == 1 && (y == 3 || y == 7)) {
                             if (piece.color ==  myColor)
                               evalSum += 16; // We don't care if the opponent can castle.
                             System.out.println("Castled");
                         }
+                         */
                         break;
                     case QUEEN:
                         pieceValue = 900 + moves.size();
@@ -167,17 +169,16 @@ public class Evaluator {
                     default:
                         break;
                 }
-                // TODO: Check for double-pawns: DONE
-                // TODO: Check for fortresses
                 // TODO: Check for threatened pieces
                 // TODO: Check for endgame
-                // TODO: Check for chess-mate-finale:
+                // TODO: Check for chess-mate-finale
 
                 if (myPawnColCounter > 0) {
                     evalSum -= myPawnColCounter * 8;
                 }
                 if (otherPawnColCounter > 0)
                     evalSum += otherPawnColCounter * 8;
+
             }
         }
         /*
@@ -199,18 +200,6 @@ public class Evaluator {
 
          */
         return evalSum;
-    }
-
-    public int[] getKing(Board board, COLOR myColor){
-        for (int y = 1; y <= 8; y++) {
-            for (int x = 1; x <= 8; x++) {
-                if(board.getPiece(x, y)== null)
-                    continue;
-                if(board.getPiece(x, y).type == PIECETYPE.KING && board.getPiece(x, y).color == myColor)
-                    return new int[]  {x , y};
-            }
-        }
-        return new int[]  {0, 0};
     }
 
     // Sets up all the pawn values. Should only be called in constructor.
