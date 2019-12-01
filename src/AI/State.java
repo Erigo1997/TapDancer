@@ -4,7 +4,9 @@ import Enumerators.COLOR;
 import Game.Move;
 
 public class State {
-    int alpha, beta, depth;
-    COLOR turnColor;
+    // TODO: Reconsider - do states really need to contain moves?
     Move move;
+    float alpha, beta;
+    int depth;
+    COLOR turnColor;
 }

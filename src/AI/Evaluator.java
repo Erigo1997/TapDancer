@@ -13,14 +13,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.PriorityQueue;
 
 public class Evaluator {
 
-    public int[][] pawnFieldValueBlack;
-    public int[][] pawnFieldValueWhite;
-    public static int[] pawnLine = {-2, 0, 3, 4, 5, 1, -2, -2};
-    COLOR myColor;
-    MoveGenerator generator;
+    private int[][] pawnFieldValueBlack;
+    private int[][] pawnFieldValueWhite;
+    private COLOR myColor;
+    private MoveGenerator generator;
 
 
     public Evaluator(COLOR myColor) {
@@ -33,20 +33,22 @@ public class Evaluator {
 
     // Return evaluation. Add up value from own pieces, remove value for opponent pieces.
     // Depth is necessary for King evaluation.
-    public float evaluateBoard(Board board, int depth, COLOR turnColor) {
-        board.toString();
-        COLOR color = turnColor == COLOR.WHITE ? COLOR.BLACK : COLOR.WHITE;
+    public float evaluateBoard(Board board, int depth) {
         boolean isCheck = false;
         float evalSum = 0;
         float pieceValue;
         boolean kingCastle = true;
         int threatenedPieces = 0;
-        int[] coord = getKing(board, color); //King coordinates
+        /*
+        int[] coord = getKing(board, myColor); //King coordinates
         System.out.println(coord[0] + ", " + coord[1]);
         Piece kingThreat = board.getPiece(coord[0], coord[1]); //King piece
-        List<Move> kingMoves = generator.getMoves(board, kingThreat, coord[0] , coord[1]); //List of moves the king can perform
-        List<Move> enemyMoves = new ArrayList<Move>();
-        List<Move> alliedMoves = new ArrayList<>();
+        PriorityQueue<Move> kingMoves = generator.getMoves(board, kingThreat, coord[0] , coord[1]); //List of moves the king can perform
+
+         */
+        PriorityQueue<Move> enemyMoves = new PriorityQueue<>();
+        PriorityQueue<Move> alliedMoves = new PriorityQueue<>();
+        PriorityQueue<Move> moves;
         for (int y = 1; y <= 8; y++) {
             int myPawnColCounter = -1; //It's set to -1 so when we have double pawn it will be 1*8=8 and if triple 2*8=16.
             int otherPawnColCounter = -1;
@@ -54,17 +56,19 @@ public class Evaluator {
                 Piece piece = board.getPiece(x, y);
                 if (piece == null) // We don't care about empty fields.
                     continue;
-                if (piece.color != myColor) {
-                    enemyMoves.addAll(generator.getMoves(board, piece, x, y));
-                } else
-                {
-                    alliedMoves.addAll(generator.getMoves(board, piece, x, y));
-                }
-
+              
                 // First we sum up pieces for a total value. This is the most basic evaluation function.
                 // System.out.println("Checking piece: " + piece);
-                List<Move> moves = generator.getMoves(board, piece, x, y);
+                moves = generator.getMoves(board, piece, x, y);
+                
+                // Add moves to enemy or ally moves.
+                if (piece.color != myColor) {
+                    enemyMoves.addAll(moves);
+                } else {
+                    alliedMoves.addAll(moves);
+                }
 
+                /*
                 //This block checks for check and check-mate
                 for(Move move : moves){
                     int tempX = move.getToX();
@@ -74,17 +78,17 @@ public class Evaluator {
                         //Do something
                         System.out.println("Check");
                     }
-                    for (int i = 0; i < kingMoves.size(); i++) {
-                        Move kingMove = kingMoves.get(i);
+                    for (Move kingMove : kingMoves) {
                         int kingX = kingMove.getToX();
                         int kingY = kingMove.getToY();
-                        //System.out.println("King: " + kingX + ", " + kingY + " Move: " + tempX + ", " + tempY);
+                        System.out.println("King: " + kingX + ", " + kingY + " Move: " + tempX + ", " + tempY);
                         if(tempX == kingX && tempY == kingY){
-                          //  System.out.println("Removed move");
+                            System.out.println("Removed move");
                             kingMoves.remove(i);
                         }
                     }
                 }
+                */
 
                 //Check-mate
                 /*
@@ -94,24 +98,39 @@ public class Evaluator {
 
                 switch(piece.type) {
                     case KING:
-                        pieceValue = 10000 - 100 * depth;
-                        evalSum += calcEvalPiece(piece, myColor, pieceValue);
+                        pieceValue = 100000 - 100 * depth;
+                        if (piece.color ==  myColor)
+                            evalSum += pieceValue;
+                        else
+                            evalSum -= pieceValue;
                         if (piece.moveCounter == 1 && (y == 3 || y == 7)) {
-                            evalSum += calcEvalPiece(piece, myColor, 16);
+                            if (piece.color ==  myColor)
+                              evalSum += 16; // We don't care if the opponent can castle.
                             System.out.println("Castled");
                         }
                         break;
                     case QUEEN:
-                        pieceValue = 900 + 1 * moves.size();
-                        evalSum += calcEvalPiece(piece, myColor, pieceValue);
+                        pieceValue = 900 + moves.size();
+                        if (piece.color ==  myColor)
+                            evalSum += pieceValue;
+                        else
+                            evalSum -= pieceValue;
                         break;
                     case ROOK:
+                        moves = generator.getMoves(board, piece, x, y);
                         pieceValue = 500 + 2 * moves.size();
-                        evalSum += calcEvalPiece(piece, myColor, pieceValue);
+                        if (piece.color ==  myColor)
+                            evalSum += pieceValue;
+                        else
+                            evalSum -= pieceValue;
                         break;
                     case BISHOP:
+                        moves = generator.getMoves(board, piece, x, y);
                         pieceValue = 300 + 2 * moves.size();
-                        evalSum += calcEvalPiece(piece, myColor, pieceValue);
+                        if (piece.color ==  myColor)
+                            evalSum += pieceValue;
+                        else
+                            evalSum -= pieceValue;
                         break;
                     case KNIGHT:
                         //distances from the 4 centers
@@ -125,16 +144,21 @@ public class Evaluator {
                         distances.add(distance3);
                         distances.add(distance4);
                         //return lowest distance
-                        //System.out.print(300 + 3 * distances.indexOf(Collections.min(distances)));
-                        pieceValue = 300 + 3 * distances.indexOf(Collections.min(distances));
-                        evalSum += calcEvalPiece(piece, myColor, pieceValue);
+                        pieceValue = 300 + 3 * Collections.min(distances);
+                        if (piece.color ==  myColor)
+                            evalSum += pieceValue;
+                        else
+                            evalSum -= pieceValue;
                         break;
                     case PAWN:
                         if (piece.color == COLOR.WHITE)
                             pieceValue = 100 + pawnFieldValueWhite[y-1][x-1];
                         else
                             pieceValue = 100 + pawnFieldValueBlack[y-1][x-1];
-                        evalSum += calcEvalPiece(piece, myColor, pieceValue);
+                        if (piece.color ==  myColor)
+                            evalSum += pieceValue;
+                        else
+                            evalSum -= pieceValue;
                         if (piece.color ==  myColor)
                             myPawnColCounter++;
                         else
@@ -144,9 +168,9 @@ public class Evaluator {
                         break;
                 }
                 // TODO: Check for double-pawns: DONE
-                // TODO: Check for fortresses: Not implementing
-                // TODO: Check for threatened pieces: Almost done
-                // TODO: Check for endgame: Not implementing
+                // TODO: Check for fortresses
+                // TODO: Check for threatened pieces
+                // TODO: Check for endgame
                 // TODO: Check for chess-mate-finale:
 
                 if (myPawnColCounter > 0) {
@@ -156,30 +180,25 @@ public class Evaluator {
                     evalSum += otherPawnColCounter * 8;
             }
         }
-        //System.out.println("Eval: " + evalSum);
+        /*
+        // Check threatened pieces
         for(Move enemyMove : enemyMoves) {
             int tempX = enemyMove.getToX();
             int tempY = enemyMove.getToY();
-            for (int i = 0; i < alliedMoves.size(); i++) {
-                Move alliedMove = alliedMoves.get(i);
+            for (Move alliedMove : alliedMoves) {
                 int fromX = alliedMove.getFromX();
                 int fromY = alliedMove.getFromY();
                 if(tempX == fromX && tempY == fromY){
                     threatenedPieces++;
-                    alliedMoves.remove(alliedMove);
-                    //System.out.println(tempX + " " + fromX + " " + tempY + " " + fromY);
+                    alliedMoves.remove(i);
+                    System.out.println(tempX + " " + fromX + " " + tempY + " " + fromY);
                 }
             }
         }
-        System.out.println("Number of threatened pieces " + threatenedPieces);
-        return evalSum;
-    }
+        System.out.println("Number of threatened pieces" + threatenedPieces);
 
-    private float calcEvalPiece(Piece piece, COLOR myColor, float value){
-        if (piece.color ==  myColor)
-            return value;
-        else
-            return -value;
+         */
+        return evalSum;
     }
 
     public int[] getKing(Board board, COLOR myColor){
@@ -195,7 +214,7 @@ public class Evaluator {
     }
 
     // Sets up all the pawn values. Should only be called in constructor.
-    public void setPawnFieldValue() {
+    private void setPawnFieldValue() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (i == 0 || i == 7) {
