@@ -57,7 +57,7 @@ public class Board {
                 }
             }
         }
-        if (move.target.type == PIECETYPE.KING) { // Set the king is dead after he has been a target of an attack.
+        if (move.target != null && move.target.type == PIECETYPE.KING) { // Set the king is dead after he has been a target of an attack.
             isKingDead = true;
         }
     }
@@ -107,7 +107,7 @@ public class Board {
 
         setPiece(move.fromX, move.fromY, move.subject);
 
-        if (move.target.type == PIECETYPE.KING) { // Set the king is dead after he has been a target of an attack. - reversal.
+        if (move.target != null && move.target.type == PIECETYPE.KING) { // Set the king is dead after he has been a target of an attack. - reversal.
             isKingDead = false;
         }
     }
