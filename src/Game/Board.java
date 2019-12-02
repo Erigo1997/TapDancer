@@ -29,7 +29,7 @@ public class Board {
     }
 
     public void playMove(Move move){
-        if (move.subject == null && move.subject.type == PIECETYPE.KING && move.special) {
+        if (move.subject != null && move.subject.type == PIECETYPE.KING && move.special) {
             if (move.toX == 7) {
                 setPiece(6, move.toY, new Piece(PIECETYPE.ROOK, move.subject.color));
                 setPiece(move.toX, move.toY, move.subject);
@@ -46,7 +46,7 @@ public class Board {
         }
         setPiece(move.fromX, move.fromY, null);
         setPiece(move.toX, move.toY, move.subject);
-        if (move.subject.type == PIECETYPE.PAWN) {
+        if (move.subject != null && move.subject.type == PIECETYPE.PAWN) {
             if (move.subject.color == COLOR.WHITE) {
                 if (move.toY == 8) {
                     setPiece(move.toX, move.toY, new Piece(askPlayerConversion(), move.subject.color));
@@ -78,10 +78,6 @@ public class Board {
         } else {
             return PIECETYPE.KNIGHT;
         }
-    }
-
-    public Field[][] getBoard(){
-        return board;
     }
 
     public void reverseMove(Move move){

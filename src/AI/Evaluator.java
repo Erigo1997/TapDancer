@@ -119,7 +119,6 @@ public class Evaluator {
                             evalSum -= pieceValue;
                         break;
                     case ROOK:
-                        moves = generator.getMoves(board, piece, x, y);
                         pieceValue = 500 + 2 * moves.size();
                         if (piece.color ==  myColor)
                             evalSum += pieceValue;
@@ -127,7 +126,6 @@ public class Evaluator {
                             evalSum -= pieceValue;
                         break;
                     case BISHOP:
-                        moves = generator.getMoves(board, piece, x, y);
                         pieceValue = 300 + 2 * moves.size();
                         if (piece.color ==  myColor)
                             evalSum += pieceValue;
