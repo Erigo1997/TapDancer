@@ -12,7 +12,7 @@ public class AIMain {
 
     public static int maxDepth = 7; // How many moves to search into.
     public int currentMaxDepth;
-    private static long maxSearchTime = 15; // How many seconds we allow the process to take at most.
+    private static long maxSearchTime = 60; // How many seconds we allow the process to take at most.
     private Board board;
     private COLOR myColor;
     private Move returnMove; // Set in Search in larger scope for practical reasons. Is the move we would like to return.
@@ -140,18 +140,15 @@ public class AIMain {
         Piece selectedPiece;
         // ----------- Search all moves with alpha beta pruning -------------
         // Check that depth hasn't exceeded max depth.
-        if (state.depth > currentMaxDepth) {
+        if (state.depth >= currentMaxDepth) {
             return evaluator.evaluateBoard(board, state.depth);
         }
 
         // Search previously best move first if we are in depth 0.
-        /* TODO: Check if this really works as intended.
         if (state.depth == 0 && bestMove != null) {
             searchValue = analyzeMove(state, isMax, bestMove);
             if (searchValue != null) return searchValue;
         }
-         */
-
         // Double for loop for the entire board.
             for (int y = 1; y <= 8; y++) {
                 for (int x = 1; x <= 8; x++) {
@@ -200,6 +197,14 @@ public class AIMain {
         // Let's alpha-beta-value-prune.
         board.playMove(move);
         value = search(newState);
+        // If move is a castling move, add value to it.
+        if (move.special && move.subject.type == PIECETYPE.KING) {
+            if (move.subject.color == myColor) {
+                value += 16;
+            } else {
+                value -= 16;
+            }
+        }
         // System.out.println("Move: " + move + "\tValue: " + value);
         board.reverseMove(move); // Make sure the board is reverted.
 
