@@ -114,38 +114,5 @@ public class Game {
         y2 = input.nextInt();
         return new Move(x1, y1, x2, y2, board.getPiece(x1, y1), board.getPiece(x2, y2), false, 33);
     }
-
-    // TODO: Remove test main.
-    public static void main(String[] args) {
-        Game game = new Game();
-        game.testGame();
-    }
-
-    // For testing with odd board stances.
-    public void testGame() {
-        // Initialize the game.
-        input = new Scanner(System.in);
-        board = new Board();
-        input = new Scanner(System.in);
-        board.setPiece(1, 2, new Piece(PIECETYPE.PAWN, COLOR.WHITE));
-        board.setPiece(2, 1, new Piece(PIECETYPE.ROOK, COLOR.WHITE));
-        board.setPiece(1, 3, new Piece(PIECETYPE.BISHOP, COLOR.WHITE));
-        board.setPiece(2, 3, new Piece(PIECETYPE.PAWN, COLOR.WHITE));
-        board.setPiece(3, 2, new Piece(PIECETYPE.PAWN, COLOR.WHITE));
-        board.setPiece(4, 2, new Piece(PIECETYPE.KING, COLOR.WHITE));
-        board.setPiece(5, 3, new Piece(PIECETYPE.PAWN, COLOR.WHITE));
-        board.setPiece(6, 3, new Piece(PIECETYPE.QUEEN, COLOR.WHITE));
-        board.setPiece(6, 1, new Piece(PIECETYPE.BISHOP, COLOR.WHITE));
-
-        board.setPiece(1, 5, new Piece(PIECETYPE.QUEEN, COLOR.BLACK));
-
-        computerColour = COLOR.WHITE;
-        // Initialize tapdancer.
-        tapDancer = new AIMain(computerColour);
-
-        // Initialize tapdancer.
-        AIMain tapDancer2 = new AIMain(COLOR.BLACK);
-        System.out.println(board.toString());
-
-    }
+    
 }

@@ -2,11 +2,10 @@ package Game;
 
 public class Move implements Comparable<Move> {
     public int fromX, fromY;
-    int toX, toY;
+    public int toX, toY;
     public Piece subject, target;
-    boolean special;
+    public boolean special;
     public int moveValue; // Each move now has a value to determine where in the priorityqueue it should lie.
-    // TODO: implement a usage of moveValue
     // Value 10 = normal move.
     // Value 33 = Player move.
     // Value 50 = A move that beats another piece.
