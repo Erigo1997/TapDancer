@@ -121,7 +121,7 @@ public class AIMain {
         // We can check if a state is a termination state (It should stop searching) if isKingDead in Board is True.
         // This flag is true when a king has been eliminated.
         if (board.isKingDead) {
-            return evaluator.evaluateBoard(board, state.depth);s
+            return evaluator.evaluateBoard(board, state.depth);
         }
 
         // TODO: Check any moves left. Probably not gonna be relevant for some time.

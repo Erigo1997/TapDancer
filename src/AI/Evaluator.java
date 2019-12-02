@@ -49,10 +49,10 @@ public class Evaluator {
         PriorityQueue<Move> enemyMoves = new PriorityQueue<>();
         PriorityQueue<Move> alliedMoves = new PriorityQueue<>();
         PriorityQueue<Move> moves;
-        for (int y = 1; y <= 8; y++) {
+        for (int x = 1; x <= 8; x++) {
             int myPawnColCounter = -1; //It's set to -1 so when we have double pawn it will be 1*8=8 and if triple 2*8=16.
             int otherPawnColCounter = -1;
-            for (int x = 1; x <= 8; x++) {
+            for (int y = 1; y <= 8; y++) {
                 Piece piece = board.getPiece(x, y);
                 if (piece == null) // We don't care about empty fields.
                     continue;
@@ -156,13 +156,14 @@ public class Evaluator {
                         else
                             pieceValue = 100 + pawnFieldValueBlack[y-1][x-1];
                         if (piece.color ==  myColor)
+                        {
                             evalSum += pieceValue;
-                        else
-                            evalSum -= pieceValue;
-                        if (piece.color ==  myColor)
                             myPawnColCounter++;
-                        else
+                        }
+                        else {
+                            evalSum -= pieceValue;
                             otherPawnColCounter++;
+                        }
                         break;
                     default:
                         break;
@@ -179,6 +180,12 @@ public class Evaluator {
                 if (otherPawnColCounter > 0)
                     evalSum += otherPawnColCounter * 8;
             }
+
+            if (myPawnColCounter > 0) {
+                evalSum -= myPawnColCounter * 8;
+            }
+            if (otherPawnColCounter > 0)
+                evalSum += otherPawnColCounter * 8;
         }
         /*
         // Check threatened pieces
@@ -195,6 +202,7 @@ public class Evaluator {
                 }
             }
         }
+        System.out.println("Number of threatened pieces" + threatenedPieces);
         System.out.println("Number of threatened pieces" + threatenedPieces);
 
          */
