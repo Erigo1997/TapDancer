@@ -204,6 +204,7 @@ public class Evaluator {
 
     // Sets up all the pawn values. Should only be called in constructor.
     private void setPawnFieldValue() {
+        /* Unnecessary, empty arrays are already 0.
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 if (i == 0 || i == 7) {
@@ -212,6 +213,8 @@ public class Evaluator {
                 }
             }
         }
+
+         */
 
         pawnFieldValueWhite[1][0] = -2;
         pawnFieldValueWhite[1][1] = 0;
@@ -262,53 +265,53 @@ public class Evaluator {
         pawnFieldValueWhite[6][6] = 23;
         pawnFieldValueWhite[6][7] = 23;
 
-        pawnFieldValueBlack[6][7] = -2;
-        pawnFieldValueBlack[6][6] = 0;
-        pawnFieldValueBlack[6][5] = 3;
-        pawnFieldValueBlack[6][4] = 4;
-        pawnFieldValueBlack[6][3] = 5;
-        pawnFieldValueBlack[6][2] = 1;
-        pawnFieldValueBlack[6][1] = -2;
         pawnFieldValueBlack[6][0] = -2;
-        pawnFieldValueBlack[5][7] = -4;
-        pawnFieldValueBlack[5][6] = -1;
-        pawnFieldValueBlack[5][5] = 4;
-        pawnFieldValueBlack[5][4] = 5;
-        pawnFieldValueBlack[5][3] = 7;
-        pawnFieldValueBlack[5][2] = 1;
-        pawnFieldValueBlack[5][1] = -4;
+        pawnFieldValueBlack[6][1] = 0;
+        pawnFieldValueBlack[6][2] = 3;
+        pawnFieldValueBlack[6][3] = 4;
+        pawnFieldValueBlack[6][4] = 5;
+        pawnFieldValueBlack[6][5] = 1;
+        pawnFieldValueBlack[6][6] = -2;
+        pawnFieldValueBlack[6][7] = -2;
         pawnFieldValueBlack[5][0] = -4;
-        pawnFieldValueBlack[4][7] = -4;
-        pawnFieldValueBlack[4][6] = 0;
-        pawnFieldValueBlack[4][5] = 6;
-        pawnFieldValueBlack[4][4] = 8;
-        pawnFieldValueBlack[4][3] = 10;
-        pawnFieldValueBlack[4][2] = 2;
-        pawnFieldValueBlack[4][1] = -4;
+        pawnFieldValueBlack[5][1] = -1;
+        pawnFieldValueBlack[5][2] = 4;
+        pawnFieldValueBlack[5][3] = 5;
+        pawnFieldValueBlack[5][4] = 7;
+        pawnFieldValueBlack[5][5] = 1;
+        pawnFieldValueBlack[5][6] = -4;
+        pawnFieldValueBlack[5][7] = -4;
         pawnFieldValueBlack[4][0] = -4;
-        pawnFieldValueBlack[3][7] = -3;
-        pawnFieldValueBlack[3][6] = 2;
-        pawnFieldValueBlack[3][5] = 10;
-        pawnFieldValueBlack[3][4] = 12;
-        pawnFieldValueBlack[3][3] = 15;
-        pawnFieldValueBlack[3][2] = 5;
-        pawnFieldValueBlack[3][1] = -3;
-        pawnFieldValueBlack[3][0] = -2;
-        pawnFieldValueBlack[2][7] = 8;
-        pawnFieldValueBlack[2][6] = 14;
-        pawnFieldValueBlack[2][5] = 23;
-        pawnFieldValueBlack[2][4] = 26;
-        pawnFieldValueBlack[2][3] = 29;
-        pawnFieldValueBlack[2][2] = 17;
-        pawnFieldValueBlack[2][1] = 8;
+        pawnFieldValueBlack[4][1] = 0;
+        pawnFieldValueBlack[4][2] = 6;
+        pawnFieldValueBlack[4][3] = 8;
+        pawnFieldValueBlack[4][4] = 10;
+        pawnFieldValueBlack[4][5] = 2;
+        pawnFieldValueBlack[4][6] = -4;
+        pawnFieldValueBlack[4][7] = -4;
+        pawnFieldValueBlack[3][0] = -3;
+        pawnFieldValueBlack[3][1] = 2;
+        pawnFieldValueBlack[3][2] = 10;
+        pawnFieldValueBlack[3][3] = 12;
+        pawnFieldValueBlack[3][4] = 15;
+        pawnFieldValueBlack[3][5] = 5;
+        pawnFieldValueBlack[3][6] = -3;
+        pawnFieldValueBlack[3][7] = -2;
         pawnFieldValueBlack[2][0] = 8;
-        pawnFieldValueBlack[1][7] = 23;
-        pawnFieldValueBlack[1][6] = 30;
-        pawnFieldValueBlack[1][5] = 42;
-        pawnFieldValueBlack[1][4] = 44;
-        pawnFieldValueBlack[1][3] = 48;
-        pawnFieldValueBlack[1][2] = 34;
-        pawnFieldValueBlack[1][1] = 23;
+        pawnFieldValueBlack[2][1] = 14;
+        pawnFieldValueBlack[2][2] = 23;
+        pawnFieldValueBlack[2][3] = 26;
+        pawnFieldValueBlack[2][4] = 29;
+        pawnFieldValueBlack[2][5] = 17;
+        pawnFieldValueBlack[2][6] = 8;
+        pawnFieldValueBlack[2][7] = 8;
         pawnFieldValueBlack[1][0] = 23;
+        pawnFieldValueBlack[1][1] = 30;
+        pawnFieldValueBlack[1][2] = 42;
+        pawnFieldValueBlack[1][3] = 44;
+        pawnFieldValueBlack[1][4] = 48;
+        pawnFieldValueBlack[1][5] = 34;
+        pawnFieldValueBlack[1][6] = 23;
+        pawnFieldValueBlack[1][7] = 23;
     }
 }

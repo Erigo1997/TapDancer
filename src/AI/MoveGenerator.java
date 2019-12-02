@@ -61,7 +61,7 @@ public class MoveGenerator {
                         output.add(new Move(x, y, x2, y2, piece, null, false, 10));
                         // Check if it can move forward twice.
                         y2 = y + 2;
-                        if (y == 0 && checkExists(x2, y2) && board.getPiece(x2, y2) == null) {
+                        if (y == 2 && checkExists(x2, y2) && board.getPiece(x2, y2) == null) {
                             output.add(new Move(x, y, x2, y2, piece, null, false, 10));
                         }
                     }
@@ -144,7 +144,6 @@ public class MoveGenerator {
                         }
                     }
                 }
-                // TODO: Fix castling.
 
                 // We check all nine fields around the king. We start at upwards and go with the clock.
                 if (checkExists(x, y + 1)) scanField(piece, piece.color, x, y, x, y + 1, output);

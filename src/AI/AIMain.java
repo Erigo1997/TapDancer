@@ -10,7 +10,7 @@ import java.util.PriorityQueue;
 
 public class AIMain {
 
-    public static int maxDepth = 5; // How many moves to search into.
+    public static int maxDepth = 1; // How many moves to search into.
     public int currentMaxDepth;
     private static long maxSearchTime = 15; // How many seconds we allow the process to take at most.
     private Board board;
@@ -200,6 +200,7 @@ public class AIMain {
         // Let's alpha-beta-value-prune.
         board.playMove(move);
         value = search(newState);
+        System.out.println("Move: " + move + "\tValue: " + value);
         board.reverseMove(move); // Make sure the board is reverted.
 
         if (isMax) {
