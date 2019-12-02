@@ -12,7 +12,7 @@ public class AIMain {
 
     public static int maxDepth = 7; // How many moves to search into.
     public int currentMaxDepth;
-    private static long maxSearchTime = 60; // How many seconds we allow the process to take at most.
+    private static long maxSearchTime = 15; // How many seconds we allow the process to take at most.
     private Board board;
     private COLOR myColor;
     private Move returnMove; // Set in Search in larger scope for practical reasons. Is the move we would like to return.
@@ -124,11 +124,9 @@ public class AIMain {
         // --------- Termination State
         // We can check if a state is a termination state (It should stop searching) if isKingDead in Board is True.
         // This flag is true when a king has been eliminated.
-        /*
         if (board.isKingDead) {
             return evaluator.evaluateBoard(board, state.depth);
         }
-         */
 
         // TODO: Check any moves left. Probably not gonna be relevant for some time.
         // ----------- Check if there are any moves left. If not, let's go back. -----------

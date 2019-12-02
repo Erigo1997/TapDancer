@@ -39,13 +39,6 @@ public class Evaluator {
         float pieceValue;
         boolean kingCastle = true;
         int threatenedPieces = 0;
-        /*
-        int[] coord = getKing(board, myColor); //King coordinates
-        System.out.println(coord[0] + ", " + coord[1]);
-        Piece kingThreat = board.getPiece(coord[0], coord[1]); //King piece
-        PriorityQueue<Move> kingMoves = generator.getMoves(board, kingThreat, coord[0] , coord[1]); //List of moves the king can perform
-
-         */
         PriorityQueue<Move> enemyMoves = new PriorityQueue<>();
         PriorityQueue<Move> alliedMoves = new PriorityQueue<>();
         PriorityQueue<Move> moves;
@@ -68,34 +61,6 @@ public class Evaluator {
                     alliedMoves.addAll(moves);
                 }
 
-                /*
-                //This block checks for check and check-mate
-                for(Move move : moves){
-                    int tempX = move.getToX();
-                    int tempY = move.getToY();
-                    if(tempX == coord[0] && tempY == coord[1]){
-                        isCheck = true;
-                        //Do something
-                        System.out.println("Check");
-                    }
-                    for (Move kingMove : kingMoves) {
-                        int kingX = kingMove.getToX();
-                        int kingY = kingMove.getToY();
-                        System.out.println("King: " + kingX + ", " + kingY + " Move: " + tempX + ", " + tempY);
-                        if(tempX == kingX && tempY == kingY){
-                            System.out.println("Removed move");
-                            kingMoves.remove(i);
-                        }
-                    }
-                }
-                */
-
-                //Check-mate
-                /*
-                if(isCheck && kingMoves.size() == 0)
-                    System.out.println("Check-mate");
-                */
-
                 switch(piece.type) {
                     case KING:
                         pieceValue = 100000 - 100 * depth;
@@ -103,13 +68,6 @@ public class Evaluator {
                             evalSum += pieceValue;
                         else
                             evalSum -= pieceValue;
-                        /*
-                        if (piece.moveCounter == 1 && (y == 3 || y == 7)) {
-                            if (piece.color ==  myColor)
-                              evalSum += 16; // We don't care if the opponent can castle.
-                            System.out.println("Castled");
-                        }
-                         */
                         break;
                     case QUEEN:
                         pieceValue = 900 + moves.size();
@@ -179,40 +137,11 @@ public class Evaluator {
 
             }
         }
-        /*
-        // Check threatened pieces
-        for(Move enemyMove : enemyMoves) {
-            int tempX = enemyMove.getToX();
-            int tempY = enemyMove.getToY();
-            for (Move alliedMove : alliedMoves) {
-                int fromX = alliedMove.getFromX();
-                int fromY = alliedMove.getFromY();
-                if(tempX == fromX && tempY == fromY){
-                    threatenedPieces++;
-                    alliedMoves.remove(i);
-                    System.out.println(tempX + " " + fromX + " " + tempY + " " + fromY);
-                }
-            }
-        }
-        System.out.println("Number of threatened pieces" + threatenedPieces);
-
-         */
         return evalSum;
     }
 
     // Sets up all the pawn values. Should only be called in constructor.
     private void setPawnFieldValue() {
-        /* Unnecessary, empty arrays are already 0.
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if (i == 0 || i == 7) {
-                    pawnFieldValueBlack[i][j] = 0;
-                    pawnFieldValueWhite[i][j] = 0;
-                }
-            }
-        }
-
-         */
 
         pawnFieldValueWhite[1][0] = -2;
         pawnFieldValueWhite[1][1] = 0;
