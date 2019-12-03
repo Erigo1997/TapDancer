@@ -121,12 +121,12 @@ public class MoveGenerator {
                 if (y == y2 && piece.color == COLOR.WHITE && x == 5) {
                     if (board.getPiece(8, y2) != null && board.getPiece(8, y2).type == PIECETYPE.ROOK && board.getPiece(8, y2).color == piece.color) {
                         if (board.getPiece(6, y2) == null && board.getPiece(7, y2) == null) {
-                            output.add(new Move(5, y2, 8, y2, piece, null, true, 100));
+                            // output.add(new Move(5, y2, 8, y2, piece, null, true, 100));
                         }
                     }
                     if (board.getPiece(1, y2) != null && board.getPiece(1, y2).type == PIECETYPE.ROOK && board.getPiece(1, y2).color == piece.color) {
                         if (board.getPiece(4, y2) == null && board.getPiece(3, y2) == null && board.getPiece(2, y2) == null) {
-                            output.add(new Move(5, y2, 1, y2, piece, null, true, 100));
+                            // output.add(new Move(5, y2, 1, y2, piece, null, true, 100));
                         }
                     }
                 }
@@ -135,12 +135,12 @@ public class MoveGenerator {
                 if (y == y2 && piece.color == COLOR.BLACK && x == 5) {
                     if (board.getPiece(8, y2) != null && board.getPiece(8, y2).type == PIECETYPE.ROOK && board.getPiece(8, y2).color == piece.color) {
                         if (board.getPiece(6, y2) == null && board.getPiece(7, y2) == null) {
-                            output.add(new Move(5, y2, 7, y2, piece, null, true, 100));
+                            // output.add(new Move(5, y2, 7, y2, piece, null, true, 100));
                         }
                     }
                     if (board.getPiece(1, y2) != null && board.getPiece(1, y2).type == PIECETYPE.ROOK && board.getPiece(1, y2).color == piece.color) {
                         if (board.getPiece(4, y2) == null && board.getPiece(3, y2) == null && board.getPiece(2, y2) == null) {
-                            output.add(new Move(5, y2, 3, y2, piece, null, true, 100));
+                            // output.add(new Move(5, y2, 3, y2, piece, null, true, 100));
                         }
                     }
                 }

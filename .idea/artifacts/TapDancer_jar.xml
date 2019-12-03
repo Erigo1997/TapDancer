@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="TapDancer:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/TapDancer_jar</output-path>
+    <root id="archive" name="TapDancer.jar">
+      <element id="module-output" name="TapDancer" />
+    </root>
+  </artifact>
+</component>

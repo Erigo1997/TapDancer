@@ -90,7 +90,7 @@ public class Board {
             }
             if (move.toX == 3) {
                 setPiece(1, move.toY, new Piece(PIECETYPE.ROOK, move.subject.color));
-                setPiece(move.toX, move.toY, move.subject);
+                setPiece(move.fromX, move.fromY, move.subject);
                 setPiece(move.toX, move.toY, null);
                 setPiece(4, move.toY, null);
             }
